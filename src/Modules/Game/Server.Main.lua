@@ -16,6 +16,7 @@ local function runContinuousAnimations()
 end
 
 local function initialize()
+  nevermore.SetRespawnTime(3)
   runContinuousAnimations()
 end
 
