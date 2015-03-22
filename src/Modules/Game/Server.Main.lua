@@ -6,6 +6,7 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
 local animate = nevermore.LoadLibrary("Animate")
+local data = nevermore.LoadLibrary("Data")
 
 --[[
   Internal: Configures properties of the game's Services.
@@ -58,6 +59,12 @@ local function runContinuousAnimations()
   animate.infoKiosk(infoKiosk)
 end
 
+local function setTimePlayed(saveData, joinTime)
+  local timePlayed = data.get(saveData, "TimePlayed") or 0
+  local sessionTime = os.time() - joinTime
+  data.set(saveData, "TimePlayed", timePlayed + sessionTime)
+end
+
 --[[
   Internal: Runs tasks on a newly joined Player
 
@@ -67,8 +74,17 @@ end
   player - The Player that just joined the game.
 --]]
 local function onPlayerAdded(player)
+  local joinTime = os.time()
+  local saveData = data.getDataStore("user_"..player.userId, "PlayerData")
+
   player.CharacterAdded:connect(function(character)
     configurePlayer(player, character)
+  end)
+
+  players.PlayerRemoving:connect(function(leavingPlayer)
+    if player == leavingPlayer then
+      setTimePlayed(saveData, joinTime)
+    end
   end)
 
   player:LoadCharacter()
