@@ -50,15 +50,6 @@ local function configurePlayer(player, character)
   humanoid.NameOcclusion = "OccludeAll"
 end
 
-local function runContinuousAnimations()
-  local terminal = workspace.SectionBottomLeft.Terminal
-  local infoKiosk = workspace.SectionBottomLeft.InfoKiosk
-
-  animate.terminalScreen(terminal)
-  animate.terminalButtons(terminal)
-  animate.infoKiosk(infoKiosk)
-end
-
 --[[
   Internal: Runs tasks on a newly joined Player
 
@@ -118,7 +109,6 @@ end
 local function initialize()
   nevermore.SetRespawnTime(3)
   configureServices()
-  runContinuousAnimations()
   handleExistingPlayers()
   players.PlayerAdded:connect(onPlayerAdded)
 end
