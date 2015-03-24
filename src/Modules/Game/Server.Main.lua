@@ -59,12 +59,6 @@ local function runContinuousAnimations()
   animate.infoKiosk(infoKiosk)
 end
 
-local function setTimePlayed(saveData, joinTime)
-  local timePlayed = data.get(saveData, "TimePlayed") or 0
-  local sessionTime = os.time() - joinTime
-  data.set(saveData, "TimePlayed", timePlayed + sessionTime)
-end
-
 --[[
   Internal: Runs tasks on a newly joined Player
 
@@ -76,6 +70,18 @@ end
 local function onPlayerAdded(player)
   local joinTime = os.time()
   local saveData = data.getDataStore("user_"..player.userId, "PlayerData")
+  local originalPlayTime = saveData:GetAsync("PlayTime") or 0
+
+  local function updatePlayTime()
+    -- Using PlayTime stored on the server is not recommended in this case.
+    -- If you have a loop saving data every few seconds, then PlayTime would
+    -- increase exponentially as sessionTime is added to it.
+    --
+    -- Getting PlayTime at the start ensures that the value won't get bloated,
+    -- as originalPlayTime is not actually being incremented.
+    local sessionTime = os.time() - joinTime
+    return originalPlayTime + sessionTime
+  end
 
   player.CharacterAdded:connect(function(character)
     configurePlayer(player, character)
@@ -83,7 +89,7 @@ local function onPlayerAdded(player)
 
   players.PlayerRemoving:connect(function(leavingPlayer)
     if player == leavingPlayer then
-      setTimePlayed(saveData, joinTime)
+      saveData:UpdateAsync("PlayTime", updatePlayTime)
     end
   end)
 
