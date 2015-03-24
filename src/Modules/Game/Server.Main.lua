@@ -69,7 +69,7 @@ end
 --]]
 local function onPlayerAdded(player)
   local joinTime = os.time()
-  local saveData = data.getDataStore("user_"..player.userId, "PlayerData")
+  local saveData = data.getDataStore(tostring(player.userId), "PlayerData")
   local originalPlayTime = saveData:GetAsync("PlayTime") or 0
 
   local function updatePlayTime()
