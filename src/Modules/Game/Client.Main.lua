@@ -10,9 +10,9 @@ local function playAnimations()
   local terminal = workspace.SectionBottomLeft.Terminal
   local infoKiosk = workspace.SectionBottomLeft.InfoKiosk
 
-  animate.terminalScreen(terminal)
-  animate.terminalButtons(terminal)
-  animate.infoKiosk(infoKiosk)
+  animate.terminalScreenLoop(terminal)
+  animate.terminalButtonsLoop(terminal)
+  animate.infoKiospLook(infoKiosk)
 end
 
 local function initialize()

@@ -22,7 +22,7 @@ local function newThreadedLoop(func)
   end)()
 end
 
-function animate.terminalScreen(terminal)
+function animate.terminalScreenLoop(terminal)
   local display = terminal.Display
   local baseReflectance = display.Reflectance
   local newReflectance = baseReflectance + .5
@@ -37,7 +37,7 @@ function animate.terminalScreen(terminal)
   newThreadedLoop(animateScreen)
 end
 
-function animate.terminalButtons(terminal)
+function animate.terminalButtonsLoop(terminal)
   local buttonList = terminal.GlowyButtons:GetChildren()
   local animSpeed = .25
 
@@ -70,7 +70,7 @@ function animate.terminalButtons(terminal)
   newThreadedLoop(animateButtons)
 end
 
-function animate.infoKiosk(infoKiosk)
+function animate.infoKioskLoop(infoKiosk)
   local display = infoKiosk.Display
   local outer = display.Outer
 
