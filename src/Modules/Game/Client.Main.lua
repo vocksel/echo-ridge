@@ -17,7 +17,6 @@ end
 
 local function initialize()
   nevermore.ClearSplash()
-  playAnimations()
 end
 
 initialize()
