@@ -5,7 +5,6 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local animate = nevermore.LoadLibrary("Animate")
 local data = nevermore.LoadLibrary("Data")
 
 --[[
