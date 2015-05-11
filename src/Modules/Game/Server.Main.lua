@@ -44,9 +44,21 @@ local function configureServices()
 end
 
 --[[
-  Internal: Sets all the properties for the Player and their Character.
+  Sets all the properties for the Player and their Character.
 
-  playerEntity - An EntityPlayer to set ROBLOX properties for.
+  This should be run inside of a CharacterAdded event that has the Character's
+  Player in its scope.
+
+  Example:
+
+    game.Players.PlayerAdded:connect(function(player)
+      player.CharacterAdded:connect(function(character)
+        configurePlayer(player, character)
+      end)
+    end)
+
+  player    - The Player that just joined the game.
+  character - The Player's Character model.
 --]]
 local function configurePlayer(player, character)
   local humanoid = character.Humanoid
