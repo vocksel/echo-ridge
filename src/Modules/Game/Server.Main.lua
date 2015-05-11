@@ -6,6 +6,9 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
 local data = nevermore.LoadLibrary("Data")
+local ServerWaveRoad = nevermore.LoadLibrary("ServerWaveRoad")
+
+
 
 --[[
   Internal: Configures properties of the game's Services.
@@ -105,10 +108,21 @@ local function handleExistingPlayers()
   end
 end
 
+local function handleWaveWorld()
+  local skyWaveModel = replicatedStorage.SkyWave
+  local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
+  local skyWave = ServerWaveRoad.new(skyWaveModel.TeleportPad)
+
+  skyWaveEntered.OnServerEvent:connect(function(player)
+    skyWave:TransIn(player)
+  end)
+end
+
 local function initialize()
   nevermore.SetRespawnTime(3)
   configureServices()
   handleExistingPlayers()
+  handleWaveWorld()
   players.PlayerAdded:connect(onPlayerAdded)
 end
 
