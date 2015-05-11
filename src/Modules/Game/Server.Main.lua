@@ -5,10 +5,11 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local data = nevermore.LoadLibrary("Data")
-local ServerWaveRoad = nevermore.LoadLibrary("ServerWaveRoad")
+local getRemoteEvent = nevermore.GetRemoteEvent
+local import = nevermore.LoadLibrary
 
-
+local data = import("Data")
+local ServerWaveRoad = import("ServerWaveRoad")
 
 --------------------------------------------------------------------------------
 -- Startup
