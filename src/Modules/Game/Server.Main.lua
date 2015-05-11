@@ -76,12 +76,6 @@ local function onPlayerAdded(player)
   local originalPlayTime = saveData:GetAsync("PlayTime") or 0
 
   local function updatePlayTime()
-    -- Using PlayTime stored on the server is not recommended in this case.
-    -- If you have a loop saving data every few seconds, then PlayTime would
-    -- increase exponentially as sessionTime is added to it.
-    --
-    -- Getting PlayTime at the start ensures that the value won't get bloated,
-    -- as originalPlayTime is not actually being incremented.
     local sessionTime = os.time() - joinTime
     return originalPlayTime + sessionTime
   end
