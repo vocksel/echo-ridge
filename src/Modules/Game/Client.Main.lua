@@ -16,6 +16,11 @@ local ClientWaveStation = import("ClientWaveStation")
 
 local player = players.LocalPlayer
 
+
+--------------------------------------------------------------------------------
+-- Wave World Interaction
+--------------------------------------------------------------------------------
+
 local function handleWaveStation()
   local skyWaveModel     = replicatedStorage.SkyWave
   local waveStationModel = workspace.SectionBottomLeft.WaveStation
@@ -46,6 +51,11 @@ local function handleWaveStation()
 
   coroutine.wrap(runInteractionLoop)()
 end
+
+
+--------------------------------------------------------------------------------
+-- Initialization
+--------------------------------------------------------------------------------
 
 local function initialize()
   nevermore.ClearSplash()

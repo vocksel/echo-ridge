@@ -10,6 +10,10 @@ local ServerWaveRoad = nevermore.LoadLibrary("ServerWaveRoad")
 
 
 
+--------------------------------------------------------------------------------
+-- Startup
+--------------------------------------------------------------------------------
+
 --[[
   Internal: Configures properties of the game's Services.
 
@@ -51,6 +55,11 @@ local function configurePlayer(player, character)
 
   humanoid.NameOcclusion = "OccludeAll"
 end
+
+
+--------------------------------------------------------------------------------
+-- Player Handling
+--------------------------------------------------------------------------------
 
 --[[
   Internal: Runs tasks on a newly joined Player
@@ -108,6 +117,11 @@ local function handleExistingPlayers()
   end
 end
 
+
+--------------------------------------------------------------------------------
+-- Wave World
+--------------------------------------------------------------------------------
+
 local function handleWaveWorld()
   local skyWaveModel = replicatedStorage.SkyWave
   local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
@@ -117,6 +131,11 @@ local function handleWaveWorld()
     skyWave:TransIn(player)
   end)
 end
+
+
+--------------------------------------------------------------------------------
+-- Initialization
+--------------------------------------------------------------------------------
 
 local function initialize()
   nevermore.SetRespawnTime(3)
