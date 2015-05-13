@@ -15,6 +15,7 @@ local ClientWaveRoad    = import("ClientWaveRoad")
 local ClientWaveStation = import("ClientWaveStation")
 
 local player = players.LocalPlayer
+local playerGui = player.PlayerGui
 
 
 --------------------------------------------------------------------------------
@@ -28,6 +29,20 @@ local function handleWaveStation()
   local waveStation      = ClientWaveStation.new(waveStationModel)
   local skyWaveEntered   = getRemoteEvent("SkyWaveEntered")
 
+  local gui = playerGui.PressKeyToInteract.Frame
+  local offScreenPos = gui.Position
+  local onScreenPos  = offScreenPos - UDim2.new(0, 0, .25, 0)
+
+  local function showInteractionGui()
+    if gui.Position == offScreenPos then
+      gui:TweenPosition(onScreenPos, "Out", "Quart", .5, true)
+    end
+  end
+
+  local function hideInteractionGui()
+    gui.Position = offScreenPos
+  end
+
   local function interact(_, inputState)
     if inputState == Enum.UserInputState.End then return end
     skyWave:Show()
@@ -36,8 +51,10 @@ local function handleWaveStation()
 
   local function setBindingState()
     if waveStation:InRange(player, 10) then
+      showInteractionGui()
       bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
     else
+      hideInteractionGui()
       unbindAction("UseWaveStation")
     end
   end
