@@ -48,29 +48,13 @@ local function configureServices()
   players.CharacterAutoLoads = false
 end
 
---[[
-  Sets all the properties for the Player and their Character.
-
-  This should be run inside of a CharacterAdded event that has the Character's
-  Player in its scope.
-
-  Example:
-
-    game.Players.PlayerAdded:connect(function(player)
-      player.CharacterAdded:connect(function(character)
-        configurePlayer(player, character)
-      end)
-    end)
-
-  player    - The Player that just joined the game.
-  character - The Player's Character model.
---]]
-local function configurePlayer(player, character)
-  local humanoid = character.Humanoid
-
+local function configurePlayer(player)
   player.HealthDisplayDistance = 0
   player.CameraMaxZoomDistance = 100
+end
 
+local function configureCharacter(character)
+  local humanoid = character.Humanoid
   humanoid.NameOcclusion = "OccludeAll"
 end
 
@@ -98,7 +82,7 @@ local function onPlayerAdded(player)
   end
 
   player.CharacterAdded:connect(function(character)
-    configurePlayer(player, character)
+    configureCharacter(character)
   end)
 
   players.PlayerRemoving:connect(function(leavingPlayer)
@@ -107,6 +91,7 @@ local function onPlayerAdded(player)
     end
   end)
 
+  configurePlayer(player)
   player:LoadCharacter()
 end
 
