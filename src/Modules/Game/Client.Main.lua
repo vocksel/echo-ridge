@@ -13,6 +13,7 @@ local bindAction        = actionBinding.bindAction
 local unbindAction      = actionBinding.unbindAction
 local ClientWaveRoad    = import("ClientWaveRoad")
 local ClientWaveStation = import("ClientWaveStation")
+local InteractionGui    = import("InteractionGui")
 
 local player = players.LocalPlayer
 local playerGui = player.PlayerGui
@@ -29,19 +30,8 @@ local function handleWaveStation()
   local waveStation      = ClientWaveStation.new(waveStationModel)
   local skyWaveEntered   = getRemoteEvent("SkyWaveEntered")
 
-  local gui = playerGui.PressKeyToInteract.Frame
-  local offScreenPos = gui.Position
-  local onScreenPos  = offScreenPos - UDim2.new(0, 0, .25, 0)
-
-  local function showInteractionGui()
-    if gui.Position == offScreenPos then
-      gui:TweenPosition(onScreenPos, "Out", "Quart", .5, true)
-    end
-  end
-
-  local function hideInteractionGui()
-    gui.Position = offScreenPos
-  end
+  local popupMsg = "Press [E] to access the Wave World"
+  local popupGui = InteractionGui.new(player, popupMsg)
 
   local function interact(_, inputState)
     if inputState == Enum.UserInputState.End then return end
@@ -51,10 +41,10 @@ local function handleWaveStation()
 
   local function setBindingState()
     if waveStation:InRange(player, 10) then
-      showInteractionGui()
+      popupGui:Show()
       bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
     else
-      hideInteractionGui()
+      popupGui:Hide()
       unbindAction("UseWaveStation")
     end
   end
