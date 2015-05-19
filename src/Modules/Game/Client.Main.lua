@@ -39,8 +39,17 @@ local function handleWaveStation()
     skyWaveEntered:FireServer(skyWaveModel)
   end
 
+  local function detectOutOfBounds()
+    local inBounds = skyWave:InsideBoundary(player)
+    if not inBounds then
+      skyWave:Hide()
+    end
+  end
+
   local function runInteractionLoop()
     while true do
+      detectOutOfBounds()
+
       if waveStation:InRange(player, 10) then
         popupGui:Show()
         bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
