@@ -39,19 +39,15 @@ local function handleWaveStation()
     skyWaveEntered:FireServer(skyWaveModel)
   end
 
-  local function setBindingState()
-    if waveStation:InRange(player, 10) then
-      popupGui:Show()
-      bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
-    else
-      popupGui:Hide()
-      unbindAction("UseWaveStation")
-    end
-  end
-
   local function runInteractionLoop()
     while true do
-      setBindingState()
+      if waveStation:InRange(player, 10) then
+        popupGui:Show()
+        bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
+      else
+        popupGui:Hide()
+        unbindAction("UseWaveStation")
+      end
       wait(.25) -- Abritrary delay. It feels good while playtesting.
     end
   end
