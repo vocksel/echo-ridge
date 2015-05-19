@@ -39,8 +39,8 @@ local function handleWaveStation()
     skyWaveEntered:FireServer(skyWaveModel)
   end
 
-  local function detectOutOfBounds()
-    local inBounds = skyWave:InsideBoundary(player)
+  local function detectOutOfBounds(part)
+    local inBounds = skyWave:InsideBoundary(part)
     if not inBounds then
       skyWave:Hide()
     end
@@ -48,14 +48,17 @@ local function handleWaveStation()
 
   local function runInteractionLoop()
     while true do
-      detectOutOfBounds()
+      local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
+      if rootPart then
+        detectOutOfBounds(rootPart)
 
-      if waveStation:InRange(player, 10) then
-        popupGui:Show()
-        bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
-      else
-        popupGui:Hide()
-        unbindAction("UseWaveStation")
+        if waveStation:InRange(rootPart, 10) then
+          popupGui:Show()
+          bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
+        else
+          popupGui:Hide()
+          unbindAction("UseWaveStation")
+        end
       end
       wait(.25) -- Abritrary delay. It feels good while playtesting.
     end

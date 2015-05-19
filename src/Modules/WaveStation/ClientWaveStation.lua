@@ -13,10 +13,9 @@ function WaveStation.new(model)
   return self
 end
 
-function WaveStation:InRange(player, distance)
-  local rootPart = player.Character.HumanoidRootPart
-  primaryPart = self.Model.PrimaryPart
-  return (primaryPart.Position - rootPart.Position).magnitude < distance
+function WaveStation:InRange(part, distance)
+  local primaryPart = self.Model.PrimaryPart
+  return (primaryPart.Position - part.Position).magnitude < distance
 end
 
 function WaveStation:Interact()

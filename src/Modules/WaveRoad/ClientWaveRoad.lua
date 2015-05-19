@@ -36,8 +36,7 @@ function ClientWaveRoad:Hide()
   self.Model.Parent = self.OrigParent
 end
 
-function ClientWaveRoad:InsideBoundary(player)
-  local rootPart = player.Character.HumanoidRootPart
+function ClientWaveRoad:InsideBoundary(part)
   -- Padding to add around the region to make it bigger than the actual model.
   --
   -- This is set arbitrarily. The top of the Wave Road must extend much
@@ -51,7 +50,7 @@ function ClientWaveRoad:InsideBoundary(player)
   -- Wave Road disappear from under them.
   local padding = Vector3.new(0, 24, 0)
   local region = createRegionFromModel(self.Model, padding)
-  return region:CastPart(rootPart)
+  return region:CastPart(part)
 end
 
 return ClientWaveRoad
