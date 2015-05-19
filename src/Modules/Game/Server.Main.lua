@@ -81,15 +81,18 @@ local function onPlayerAdded(player)
     return originalPlayTime + sessionTime
   end
 
-  player.CharacterAdded:connect(function(character)
+  local function onCharacterAdded(character)
     configureCharacter(character)
-  end)
+  end
 
-  players.PlayerRemoving:connect(function(leavingPlayer)
+  local function onPlayerRemoving(leavingPlayer)
     if player == leavingPlayer then
       saveData:UpdateAsync("PlayTime", updatePlayTime)
     end
-  end)
+  end
+
+  player.CharacterAdded:connect(onCharacterAdded)
+  players.PlayerRemoving:connect(onPlayerRemoving)
 
   configurePlayer(player)
   player:LoadCharacter()
