@@ -127,9 +127,11 @@ local function handleWaveWorld()
   local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
   local skyWave = ServerWaveRoad.new(skyWaveModel.TeleportPad)
 
-  skyWaveEntered.OnServerEvent:connect(function(player)
+  local function onSkyWaveEntered(player)
     skyWave:TransIn(player)
-  end)
+  end
+
+  skyWaveEntered.OnServerEvent:connect(onSkyWaveEntered)
 end
 
 
