@@ -18,9 +18,4 @@ function WaveStation:InRange(part, distance)
   return (primaryPart.Position - part.Position).magnitude < distance
 end
 
-function WaveStation:Interact()
-  -- Then I need to either fire an event or have the SkyWave (custom) instance
-  -- passed in so I can teleport the player and show the sky wave.
-end
-
 return WaveStation
