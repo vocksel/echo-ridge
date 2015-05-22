@@ -50,9 +50,10 @@ local function handleWaveStation()
     while true do
       local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
       if rootPart then
+        local inRange = waveStation:InRange(rootPart, 10)
         detectOutOfBounds(rootPart)
 
-        if waveStation:InRange(rootPart, 10) then
+        if inRange then
           popupGui:Show()
           bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
         else

@@ -1,12 +1,13 @@
 
-local ClientWaveRoad = {}
-ClientWaveRoad.__index = ClientWaveRoad
-
 local replicatedStorage = game:GetService("ReplicatedStorage")
+
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
 local import = nevermore.LoadLibrary
 
 local Region = import("Region")
+
+local ClientWaveRoad = {}
+ClientWaveRoad.__index = ClientWaveRoad
 
 local function createRegionFromModel(model, padding)
   -- This method is deprecated, but there does not seem to be an alternative.

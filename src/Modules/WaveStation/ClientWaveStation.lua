@@ -1,7 +1,4 @@
 
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-
 local WaveStation = {}
 WaveStation.__index = WaveStation
 
