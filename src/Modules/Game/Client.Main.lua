@@ -36,7 +36,7 @@ local function handleWaveStation()
   local function interact(_, inputState)
     if inputState == Enum.UserInputState.End then return end
     skyWave:Show()
-    skyWaveEntered:FireServer(skyWaveModel)
+    skyWaveEntered:FireServer()
   end
 
   local function detectOutOfBounds(part)
