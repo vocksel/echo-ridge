@@ -31,7 +31,7 @@ local function handleWaveStation()
   local skyWaveEntered   = getRemoteEvent("SkyWaveEntered")
 
   local popupMsg = "Press [E] to access the Wave World"
-  local popupGui = InteractionGui.new(player, popupMsg)
+  local popupGui = InteractionGui.new(playerGui, popupMsg)
 
   local function interact(_, inputState)
     if inputState == Enum.UserInputState.End then return end

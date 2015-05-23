@@ -2,8 +2,8 @@
 local InteractionGui = {}
 InteractionGui.__index = InteractionGui
 
-local function constructGui(player, msg, position)
-  local gui = Instance.new("ScreenGui", player.PlayerGui)
+local function constructGui(parent, msg, position)
+  local gui = Instance.new("ScreenGui", parent)
   gui.Name = "InteractionGui"
 
   local frame = Instance.new("Frame", gui)
@@ -24,12 +24,12 @@ local function constructGui(player, msg, position)
   return gui
 end
 
-function InteractionGui.new(player, msg)
+function InteractionGui.new(parent, msg)
   local self = {}
 
   self.OffScreen = UDim2.new(.5,-100, 1,0)
   self.OnScreen  = self.OffScreen - UDim2.new(0,0, .25,0)
-  self.Gui = constructGui(player, msg, self.OffScreen)
+  self.Gui = constructGui(parent, msg, self.OffScreen)
 
   return setmetatable(self, InteractionGui)
 end
