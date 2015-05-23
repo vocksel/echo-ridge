@@ -9,12 +9,12 @@ local function teleportOnTop(model, part)
 end
 
 function ServerWaveRoad.new(entrance, exit)
-  local self = setmetatable({}, ServerWaveRoad)
+  local self = {}
 
   self.EntryPoint = entrance
   self.ExitPoint = exit
 
-  return self
+  return setmetatable(self, ServerWaveRoad)
 end
 
 -- Teleporting the player onto their Wave Road should only be done once you

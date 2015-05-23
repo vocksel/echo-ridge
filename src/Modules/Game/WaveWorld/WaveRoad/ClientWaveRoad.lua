@@ -18,7 +18,7 @@ local function createRegionFromModel(model, padding)
 end
 
 function ClientWaveRoad.new(model)
-  local self = setmetatable({}, ClientWaveRoad)
+  local self = {}
 
   -- Padding to add around the region to make it bigger than the actual model.
   --
@@ -40,7 +40,7 @@ function ClientWaveRoad.new(model)
   -- later (Thus hiding it from view).
   self.OrigParent = model.Parent
 
-  return self
+  return setmetatable(self, ClientWaveRoad)
 end
 
 function ClientWaveRoad:Show()

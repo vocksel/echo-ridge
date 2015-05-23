@@ -25,13 +25,13 @@ local function constructGui(player, msg, position)
 end
 
 function InteractionGui.new(player, msg)
-  local self = setmetatable({}, InteractionGui)
+  local self = {}
 
   self.OffScreen = UDim2.new(.5,-100, 1,0)
   self.OnScreen  = self.OffScreen - UDim2.new(0,0, .25,0)
   self.Gui = constructGui(player, msg, self.OffScreen)
 
-  return self
+  return setmetatable(self, InteractionGui)
 end
 
 function InteractionGui:Show()

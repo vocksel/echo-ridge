@@ -3,11 +3,11 @@ local WaveStation = {}
 WaveStation.__index = WaveStation
 
 function WaveStation.new(model)
-  local self = setmetatable({}, WaveStation)
+  local self = {}
 
   self.Model = model
 
-  return self
+  return setmetatable(self, WaveStation)
 end
 
 function WaveStation:InRange(part, distance)
