@@ -52,7 +52,7 @@ function ClientWaveRoad:Hide()
 end
 
 function ClientWaveRoad:InsideBoundary(part)
-  return region:CastPart(part)
+  return self.Region:CastPart(part)
 end
 
 return ClientWaveRoad
