@@ -53,10 +53,3 @@ function InteractionGui:Destroy()
 end
 
 return InteractionGui
-
--- local player = game.Players.LocalPlayer
--- local msg = "Press [E] to enter the Wave World"
--- local gui = InteractionGui.new(player, msg)
--- gui:Show()
--- wait(2)
--- gui:Hide()
