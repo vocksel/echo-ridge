@@ -1,18 +1,24 @@
 
-local WaveStation = {}
-WaveStation.__index = WaveStation
+local replicatedStorage = game:GetService("ReplicatedStorage")
 
-function WaveStation.new(model)
-  local self = {}
+local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
+local import = nevermore.LoadLibrary
 
-  self.Model = model
+local BaseModel = import("BaseModel")
 
-  return setmetatable(self, WaveStation)
+
+--------------------------------------------------------------------------------
+-- Client Wave Station
+--------------------------------------------------------------------------------
+
+local ClientWaveStation = {}
+ClientWaveStation.__index = ClientWaveStation
+setmetatable(ClientWaveStation, BaseModel)
+
+function ClientWaveStation.new(model)
+  local self = BaseModel.new(model)
+
+  return setmetatable(self, ClientWaveStation)
 end
 
-function WaveStation:InRange(part, distance)
-  local primaryPart = self.Model.PrimaryPart
-  return (primaryPart.Position - part.Position).magnitude < distance
-end
-
-return WaveStation
+return ClientWaveStation

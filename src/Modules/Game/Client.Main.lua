@@ -40,7 +40,7 @@ local function handleWaveStation()
   end
 
   local function detectOutOfBounds(part)
-    local inBounds = skyWave:InsideBoundary(part)
+    local inBounds = skyWave:PartWithinBoundary(part)
 
     if not inBounds then
       skyWave:Hide()
@@ -48,7 +48,7 @@ local function handleWaveStation()
   end
 
   local function setInteractionState(rootPart)
-    local inRange = waveStation:InRange(rootPart, 10)
+    local inRange = waveStation:PartInRange(rootPart, 10)
 
     if inRange then
       popupGui:Show()
