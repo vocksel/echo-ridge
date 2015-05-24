@@ -1,7 +1,6 @@
 -- Name: Server.Main
 -- ClassName: Script
 
-local dataStore = game:GetService("DataStoreService")
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -10,10 +9,7 @@ local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local ServerWaveRoad = import("ServerWaveRoad")
-
-if game.PlaceId == 0 then
-  dataStore = import("MockDataStoreService")
-end
+local DataStore = import("DataStore")
 
 
 --------------------------------------------------------------------------------
@@ -73,8 +69,8 @@ end
 --]]
 local function onPlayerAdded(player)
   local joinTime = os.time()
-  local saveData = dataStore:GetDataStore(tostring(player.userId), "PlayerData")
-  local originalPlayTime = saveData:GetAsync("PlayTime") or 0
+  local saveData = DataStore.new(tostring(player.userId), "PlayerData")
+  local originalPlayTime = saveData:Get("PlayTime") or 0
 
   local function updatePlayTime()
     local sessionTime = os.time() - joinTime
@@ -87,7 +83,7 @@ local function onPlayerAdded(player)
 
   local function onPlayerRemoving(leavingPlayer)
     if player == leavingPlayer then
-      saveData:UpdateAsync("PlayTime", updatePlayTime)
+      saveData:Update("PlayTime", updatePlayTime)
     end
   end
 
