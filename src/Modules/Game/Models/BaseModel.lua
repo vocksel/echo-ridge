@@ -43,7 +43,7 @@ function BaseModel:PartInRange(part, maxDistance)
 end
 
 function BaseModel:PartWithinBoundary(part)
-  self.Region:CastPart(part)
+  return self.Region:CastPart(part)
 end
 
 return BaseModel
