@@ -69,12 +69,22 @@ end
 --]]
 local function onPlayerAdded(player)
   local joinTime = os.time()
-  local saveData = DataStore.new(tostring(player.userId), "PlayerData")
-  local originalPlayTime = saveData:Get("PlayTime") or 0
+  local data     = DataStore.new(tostring(player.userId), "PlayerData")
+  local playTime = data:Get("PlayTime") or 0
 
   local function updatePlayTime()
     local sessionTime = os.time() - joinTime
-    return originalPlayTime + sessionTime
+    return playTime + sessionTime
+  end
+
+  local function saveData()
+    data:Update("PlayTime", updatePlayTime)
+  end
+
+  local function periodicSave()
+    while wait(30) do
+      saveData()
+    end
   end
 
   local function onCharacterAdded(character)
@@ -83,7 +93,7 @@ local function onPlayerAdded(player)
 
   local function onPlayerRemoving(leavingPlayer)
     if player == leavingPlayer then
-      saveData:Update("PlayTime", updatePlayTime)
+      saveData()
     end
   end
 
@@ -92,6 +102,8 @@ local function onPlayerAdded(player)
 
   configurePlayer(player)
   player:LoadCharacter()
+
+  coroutine.wrap(periodicSave)()
 end
 
 --[[
