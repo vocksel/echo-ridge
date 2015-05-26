@@ -19,11 +19,12 @@ local DataStore = import("DataStore")
 --[[
   Internal: Configures properties of the game's Services.
 
-  There is no publicly available file for this game, so it's best to configure
-  properties progmatically so that the game is consistent between two place files.
+  There is no publicly available rbxl file for the game, so it's best to
+  configure properties progmatically. That way the game is consistent between
+  two developer's level files.
 
-  Setting properties this way also opens up the possibility to document why a
-  property has been set to a certain value.
+  This way also opens up the possibility to document why a property has been set
+  to a certain value.
 --]]
 local function configureServices()
   -- When testing locally, scripts do not have a chance to connect to the
@@ -45,7 +46,10 @@ local function configureServices()
 end
 
 local function configurePlayer(player)
+  -- Health does not play a part in the game and can be hidden from view.
   player.HealthDisplayDistance = 0
+
+  -- Reduces the massive default zoom (400). Nobody needs to zoom out that far.
   player.CameraMaxZoomDistance = 100
 end
 
@@ -73,6 +77,11 @@ local function onPlayerAdded(player)
   local playTime = data:Get("PlayTime") or 0
 
   local function updatePlayTime()
+    -- We do not use the current value of PlayTime that's passed by
+    -- UpdateAsync. PlayTime is stored in a variable so that it remains static.
+    --
+    -- This is in case PlayTime is updated more than once per session. Adding
+    -- the current value of PlayTime with the session time will cause bloating.
     local sessionTime = os.time() - joinTime
     return playTime + sessionTime
   end
