@@ -87,8 +87,11 @@ local function handleWaveStation()
       local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
 
       if isAlive(player.Character) then
-        detectOutOfBounds(rootPart)
         setInteractionState(rootPart)
+      end
+
+      if skyWave.Visible then
+        detectOutOfBounds(rootPart)
       end
 
       wait(.25) -- Abritrary delay. It feels good while playtesting.
