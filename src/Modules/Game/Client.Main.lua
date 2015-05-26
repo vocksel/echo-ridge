@@ -9,7 +9,7 @@ local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local BindableAction    = import("BindableAction")
-local ClientWaveRoad    = import("ClientWaveRoad")
+local WaveRoad          = import("WaveRoad")
 local ClientWaveStation = import("ClientWaveStation")
 local InteractionGui    = import("InteractionGui")
 
@@ -35,7 +35,7 @@ end
 local function handleWaveStation()
   local skyWaveModel     = replicatedStorage.SkyWave
   local waveStationModel = workspace.SectionBottomLeft.WaveStation
-  local skyWave          = ClientWaveRoad.new(skyWaveModel)
+  local skyWave          = WaveRoad.new(skyWaveModel)
   local waveStation      = ClientWaveStation.new(waveStationModel)
   local skyWaveEntered   = getRemoteEvent("SkyWaveEntered")
 

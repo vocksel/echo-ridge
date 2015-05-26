@@ -8,7 +8,7 @@ local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
 local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
-local ServerWaveRoad = import("ServerWaveRoad")
+local WaveRoad = import("WaveRoad")
 local DataStore = import("DataStore")
 
 
@@ -142,7 +142,7 @@ end
 local function handleWaveWorld()
   local skyWaveModel = replicatedStorage.SkyWave
   local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
-  local skyWave = ServerWaveRoad.new(skyWaveModel.TeleportPad)
+  local skyWave = WaveRoad.new(skyWaveModel)
 
   local function onSkyWaveEntered(player)
     skyWave:TransIn(player)
