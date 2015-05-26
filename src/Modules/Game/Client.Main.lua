@@ -48,6 +48,16 @@ local function handleWaveStation()
     end
   end
 
+  local function enableInteraction()
+    popupGui:Show()
+    useWaveStation:Bind()
+  end
+
+  local function disableInteraction()
+    popupGui:Hide()
+    useWaveStation:Unbind()
+  end
+
   local function setInteractionState(rootPart)
     local inRange = waveStation:PartInRange(rootPart, 10)
     local actionIsBound = useWaveStation:IsBound()
@@ -57,11 +67,9 @@ local function handleWaveStation()
     -- unbound.
 
     if inRange and not actionIsBound then
-      popupGui:Show()
-      useWaveStation:Bind()
+      enableInteraction()
     elseif not inRange and actionIsBound then
-      popupGui:Hide()
-      useWaveStation:Unbind()
+      disableInteraction()
     end
   end
 
