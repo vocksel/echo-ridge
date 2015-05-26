@@ -42,8 +42,12 @@ local function handleWaveStation()
     skyWaveEntered:FireServer()
   end
 
-  local useWaveStation = BindableAction.new("UseWaveStation", {Enum.KeyCode.E})
-  useWaveStation:BindFunction("Primary", interact)
+  local useWaveStation = BindableAction.FromData{
+    ActionName = "UseWaveStation",
+    FunctionToBind = interact,
+    CreateTouchButton = true,
+    InputTypes = { Enum.KeyCode.E }
+  }
 
   local function detectOutOfBounds(part)
     local inBounds = skyWave:PartWithinBoundary(part)
