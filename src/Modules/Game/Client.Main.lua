@@ -8,9 +8,7 @@ local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
 local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
-local actionBinding     = import("ActionBinding")
-local bindAction        = actionBinding.bindAction
-local unbindAction      = actionBinding.unbindAction
+local BindableAction    = import("BindableAction")
 local ClientWaveRoad    = import("ClientWaveRoad")
 local ClientWaveStation = import("ClientWaveStation")
 local InteractionGui    = import("InteractionGui")
@@ -39,6 +37,9 @@ local function handleWaveStation()
     skyWaveEntered:FireServer()
   end
 
+  local useWaveStation = BindableAction.new("UseWaveStation", {Enum.KeyCode.E})
+  useWaveStation:BindFunction("Primary", interact)
+
   local function detectOutOfBounds(part)
     local inBounds = skyWave:PartWithinBoundary(part)
 
@@ -49,13 +50,18 @@ local function handleWaveStation()
 
   local function setInteractionState(rootPart)
     local inRange = waveStation:PartInRange(rootPart, 10)
+    local actionIsBound = useWaveStation:IsBound()
 
-    if inRange then
+    -- If an action is bound or unbound twice, an error occurs. To compensate
+    -- for this, we use a flip-flop style logic gate to toggle between bound and
+    -- unbound.
+
+    if inRange and not actionIsBound then
       popupGui:Show()
-      bindAction("UseWaveStation", interact, true, Enum.KeyCode.E)
-    else
+      useWaveStation:Bind()
+    elseif not inRange and actionIsBound then
       popupGui:Hide()
-      unbindAction("UseWaveStation")
+      useWaveStation:Unbind()
     end
   end
 
