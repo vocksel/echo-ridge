@@ -2,6 +2,7 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
+local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local BaseModel = import("BaseModel")
@@ -37,6 +38,9 @@ function WaveRoad.new(model)
   self.Visible = model.Parent == workspace
 
   self.EntryPoint = model.TeleportPad
+
+  self.Entered = getRemoteEvent(model.Name.."Entered")
+  self.Left = getRemoteEvent(model.Name.."Left")
 
   return setmetatable(self, WaveRoad)
 end

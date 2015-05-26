@@ -37,7 +37,6 @@ local function handleWaveStation()
   local waveStationModel = workspace.SectionBottomLeft.WaveStation
   local skyWave          = WaveRoad.new(skyWaveModel)
   local waveStation      = ClientWaveStation.new(waveStationModel)
-  local skyWaveEntered   = getRemoteEvent("SkyWaveEntered")
 
   local popupMsg = "Press [E] to access the Wave World"
   local popupGui = InteractionGui.new(playerGui, popupMsg)
@@ -45,7 +44,7 @@ local function handleWaveStation()
   local function interact(_, inputState)
     if inputState == Enum.UserInputState.End then return end
     skyWave:Show()
-    skyWaveEntered:FireServer()
+    skyWave.Entered:FireServer()
   end
 
   local useWaveStation = BindableAction.FromData{

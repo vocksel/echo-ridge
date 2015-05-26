@@ -141,14 +141,13 @@ end
 
 local function handleWaveWorld()
   local skyWaveModel = replicatedStorage.SkyWave
-  local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
   local skyWave = WaveRoad.new(skyWaveModel)
 
   local function onSkyWaveEntered(player)
     skyWave:TransIn(player)
   end
 
-  skyWaveEntered.OnServerEvent:connect(onSkyWaveEntered)
+  skyWave.Entered.OnServerEvent:connect(onSkyWaveEntered)
 end
 
 
