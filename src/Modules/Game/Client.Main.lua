@@ -16,6 +16,11 @@ local InteractionGui    = import("InteractionGui")
 local player = players.LocalPlayer
 local playerGui = player.PlayerGui
 
+local function isAlive(character)
+  local humanoid = character:FindFirstChild("Humanoid")
+  return humanoid.Health > 0
+end
+
 
 --------------------------------------------------------------------------------
 -- Wave World Interaction
@@ -77,7 +82,7 @@ local function handleWaveStation()
     while true do
       local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
 
-      if rootPart then
+      if isAlive(player.Character) then
         detectOutOfBounds(rootPart)
         setInteractionState(rootPart)
       end
