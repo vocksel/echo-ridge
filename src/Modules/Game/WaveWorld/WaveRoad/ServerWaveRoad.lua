@@ -8,11 +8,10 @@ local function teleportOnTop(model, part)
   model:SetPrimaryPartCFrame(part.CFrame * offset)
 end
 
-function ServerWaveRoad.new(entrance, exit)
+function ServerWaveRoad.new(entrance)
   local self = {}
 
   self.EntryPoint = entrance
-  self.ExitPoint = exit
 
   return setmetatable(self, ServerWaveRoad)
 end
@@ -23,10 +22,6 @@ end
 
 function ServerWaveRoad:TransIn(player)
   teleportOnTop(player.Character, self.EntryPoint)
-end
-
-function ServerWaveRoad:TransOut(player)
-  teleportOnTop(player.Character, self.ExitPoint)
 end
 
 return ServerWaveRoad
