@@ -10,7 +10,10 @@ local import = nevermore.LoadLibrary
 
 local WaveRoad = import("WaveRoad")
 local DataStore = import("DataStore")
+local Stage = import("Stage")
 
+local echoRidgeStage = Stage.new("EchoRidge")
+local skyWaveStage = Stage.new("SkyWave")
 
 --------------------------------------------------------------------------------
 -- Startup
@@ -96,6 +99,11 @@ local function onPlayerAdded(player)
     end
   end
 
+  local function removeFromStages()
+    echoRidgeStage:RemovePlayer(player)
+    skyWaveStage:RemovePlayer(player)
+  end
+
   local function onCharacterAdded(character)
     configureCharacter(character)
   end
@@ -103,6 +111,7 @@ local function onPlayerAdded(player)
   local function onPlayerRemoving(leavingPlayer)
     if player == leavingPlayer then
       saveData()
+      removeFromStages()
     end
   end
 
@@ -111,6 +120,8 @@ local function onPlayerAdded(player)
 
   configurePlayer(player)
   player:LoadCharacter()
+
+  echoRidgeStage:AddPlayer(player)
 
   coroutine.wrap(periodicSave)()
 end
@@ -145,8 +156,14 @@ local function handleWaveWorld()
 
   local function onSkyWaveEntered(player)
     skyWave:TransIn(player)
+    echoRidgeStage:TransferPlayer(player, skyWaveStage)
   end
 
+  local function onSkyWaveLeft(player)
+    skyWaveStage:TransferPlayer(player, echoRidgeStage)
+  end
+
+  skyWave.Left.OnServerEvent:connect(onSkyWaveLeft)
   skyWave.Entered.OnServerEvent:connect(onSkyWaveEntered)
 end
 

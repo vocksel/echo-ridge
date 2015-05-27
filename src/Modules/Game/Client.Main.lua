@@ -59,6 +59,7 @@ local function handleWaveStation()
 
     if not inBounds then
       skyWave:Hide()
+      skyWave.Left:FireServer()
     end
   end
 
