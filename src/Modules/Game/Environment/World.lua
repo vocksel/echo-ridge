@@ -9,12 +9,6 @@
 --]]
 
 local players = game:GetService("Players")
-local replicatedStorage = game:GetService("ReplicatedStorage")
-
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
-
-local Signal = import("Signal")
 
 local function cellHasPlayer(cell, player)
   local playerList = cell:GetPlayers()
@@ -40,10 +34,6 @@ function World.new(cellList)
   -- A collection of Cell instances that the player can travel to.
   self.Cells = cellList
 
-  -- Events
-  self.CellEntered = Signal.new()
-  self.CellLeft = Signal.new()
-
   return setmetatable(self, World)
 end
 
@@ -57,7 +47,6 @@ end
 
 function World:LeaveCell(cell, player)
   cell:Leave(player)
-  self.CellLeft:fire(cell, player)
 end
 
 -- Used for transfering players between cells and when a player leaves the game.
@@ -71,7 +60,6 @@ end
 function World:EnterCell(cell, player)
   self:LeaveCurrentCell(player)
   cell:Enter(player)
-  self.CellEntered:fire(cell, player)
 end
 
 return World

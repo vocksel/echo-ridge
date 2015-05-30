@@ -6,6 +6,13 @@
   the game you can travel to can be a Cell, not just interiors.
 --]]
 
+local replicatedStorage = game:GetService("ReplicatedStorage")
+
+local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
+local import = nevermore.LoadLibrary
+
+local Signal = import("Signal")
+
 local Cell = {}
 Cell.__index = Cell
 
@@ -14,6 +21,9 @@ function Cell.new(name)
 
   self.Name = name or "Cell"
   self.PlayerList = {}
+
+  self.Entered = Signal.new()
+  self.Left = Signal.new()
 
   return setmetatable(self, Cell)
 end
@@ -36,12 +46,15 @@ function Cell:Leave(player)
   for index, playerInList in pairs(self.PlayerList) do
     if player == playerInList then
       table.remove(self.PlayerList, index)
+      self.Left:fire()
+      break
     end
   end
 end
 
 function Cell:Enter(player)
   table.insert(self.PlayerList, player)
+  self.Entered:fire()
 end
 
 return Cell
