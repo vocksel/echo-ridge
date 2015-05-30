@@ -155,6 +155,8 @@ end
 local function handleWaveWorld()
   local skyWaveModel = replicatedStorage.SkyWave
   local skyWave = WaveRoad.new(skyWaveModel)
+  local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
+  local skyWaveLeft = getRemoteEvent("SkyWaveLeft")
 
   local function onSkyWaveEntered(player)
     skyWave:TransIn(player)
@@ -165,8 +167,8 @@ local function handleWaveWorld()
     world:EnterCell(cells.EchoRidge, player)
   end
 
-  skyWave.Left.OnServerEvent:connect(onSkyWaveLeft)
-  skyWave.Entered.OnServerEvent:connect(onSkyWaveEntered)
+  skyWaveLeft.OnServerEvent:connect(onSkyWaveLeft)
+  skyWaveEntered.OnServerEvent:connect(onSkyWaveEntered)
 end
 
 
