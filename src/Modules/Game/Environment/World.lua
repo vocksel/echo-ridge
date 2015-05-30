@@ -35,26 +35,16 @@ World.__index = World
 function World.new(cellList)
   local self = {}
 
+  assert(cellList, "World.new() requires a table of Cell instances")
+
   -- A collection of Cell instances that the player can travel to.
-  self.Cells = {}
+  self.Cells = cellList
 
   -- Events
   self.CellEntered = Signal.new()
   self.CellLeft = Signal.new()
 
   return setmetatable(self, World)
-end
-
-function World:AddCell(cell)
-  table.insert(self.Cells, cell)
-end
-
--- Typically you would have a table of all your cells. Using this method to loop
--- over them goes a lot quicker than individually adding them with AddCell.
-function World:AddCells(cellList)
-  for _, cell in pairs(cellList) do
-      self:AddCell(cell)
-  end
 end
 
 function World:GetCurrentCell(player)

@@ -13,12 +13,13 @@ local DataStore = import("DataStore")
 local World = import("World")
 local Cell = import("Cell")
 
-local world = World.new()
-
 local cells = {
   EchoRidge = Cell.new("EchoRidge"),
   SkyWave = Cell.new("SkyWave")
 }
+
+local world = World.new(cells)
+
 
 --------------------------------------------------------------------------------
 -- Startup
@@ -175,7 +176,6 @@ end
 
 local function initialize()
   nevermore.SetRespawnTime(3)
-  world:AddCells(cells)
   configureServices()
   handleExistingPlayers()
   handleWaveWorld()
