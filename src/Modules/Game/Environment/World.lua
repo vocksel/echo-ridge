@@ -48,7 +48,7 @@ function World.new(cellList)
 end
 
 function World:GetCurrentCell(player)
-  for _, cell in ipairs(self.Cells) do
+  for _, cell in pairs(self.Cells) do
     if cellHasPlayer(cell, player) then
       return cell
     end
