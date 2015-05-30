@@ -10,10 +10,15 @@ local import = nevermore.LoadLibrary
 
 local WaveRoad = import("WaveRoad")
 local DataStore = import("DataStore")
-local Stage = import("Stage")
+local World = import("World")
+local Cell = import("Cell")
 
-local echoRidgeStage = Stage.new("EchoRidge")
-local skyWaveStage = Stage.new("SkyWave")
+local world = World.new()
+
+local cells = {
+  EchoRidge = Cell.new("EchoRidge"),
+  SkyWave = Cell.new("SkyWave")
+}
 
 --------------------------------------------------------------------------------
 -- Startup
@@ -99,11 +104,6 @@ local function onPlayerAdded(player)
     end
   end
 
-  local function removeFromStages()
-    echoRidgeStage:RemovePlayer(player)
-    skyWaveStage:RemovePlayer(player)
-  end
-
   local function onCharacterAdded(character)
     configureCharacter(character)
   end
@@ -111,7 +111,7 @@ local function onPlayerAdded(player)
   local function onPlayerRemoving(leavingPlayer)
     if player == leavingPlayer then
       saveData()
-      removeFromStages()
+      world:LeaveCurrentCell(player)
     end
   end
 
@@ -121,7 +121,8 @@ local function onPlayerAdded(player)
   configurePlayer(player)
   player:LoadCharacter()
 
-  echoRidgeStage:AddPlayer(player)
+  -- Start the player off in Echo Ridge
+  world:EnterCell(cells.EchoRidge, player)
 
   coroutine.wrap(periodicSave)()
 end
@@ -156,11 +157,11 @@ local function handleWaveWorld()
 
   local function onSkyWaveEntered(player)
     skyWave:TransIn(player)
-    echoRidgeStage:TransferPlayer(player, skyWaveStage)
+    world:EnterCell(cells.SkyWave, player)
   end
 
   local function onSkyWaveLeft(player)
-    skyWaveStage:TransferPlayer(player, echoRidgeStage)
+    world:EnterCell(cells.EchoRidge, player)
   end
 
   skyWave.Left.OnServerEvent:connect(onSkyWaveLeft)
@@ -174,6 +175,7 @@ end
 
 local function initialize()
   nevermore.SetRespawnTime(3)
+  world:AddCells(cells)
   configureServices()
   handleExistingPlayers()
   handleWaveWorld()
