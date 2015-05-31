@@ -32,6 +32,10 @@ function Cell:__tostring()
   return self.Name
 end
 
+function Cell:__eq(cell)
+  return self.Name == cell.Name
+end
+
 -- Gathers a list of Players currently in this Cell.
 --
 -- This is exactly the same as you would use the GetPlayers method of the
