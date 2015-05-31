@@ -9,7 +9,7 @@ local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local WaveRoad = import("WaveRoad")
-local DataStore = import("DataStore")
+local PlayerData = import("PlayerData")
 local World = import("World")
 local Cell = import("Cell")
 
@@ -81,51 +81,28 @@ end
   player - The Player that just joined the game.
 --]]
 local function onPlayerAdded(player)
-  local joinTime = os.time()
-  local data     = DataStore.new(tostring(player.userId), "PlayerData")
-  local playTime = data:Get("PlayTime") or 0
+  local data = PlayerData.new(player)
+  data:AutoSave()
 
-  local function updatePlayTime()
-    -- We do not use the current value of PlayTime that's passed by
-    -- UpdateAsync. PlayTime is stored in a variable so that it remains static.
-    --
-    -- This is in case PlayTime is updated more than once per session. Adding
-    -- the current value of PlayTime with the session time will cause bloating.
-    local sessionTime = os.time() - joinTime
-    return playTime + sessionTime
-  end
-
-  local function saveData()
-    data:Update("PlayTime", updatePlayTime)
-  end
-
-  local function periodicSave()
-    while wait(30) do
-      saveData()
-    end
-  end
-
-  local function onCharacterAdded(character)
+  local function onChaarcterAdded(character)
     configureCharacter(character)
   end
 
   local function onPlayerRemoving(leavingPlayer)
     if player == leavingPlayer then
-      saveData()
+      data:Save()
       world:LeaveCurrentCell(player)
     end
   end
 
-  player.CharacterAdded:connect(onCharacterAdded)
+  player.CharacterAdded:connect(onChaarcterAdded)
   players.PlayerRemoving:connect(onPlayerRemoving)
 
-  configurePlayer(player)
   player:LoadCharacter()
+  configurePlayer(player)
 
   -- Start the player off in Echo Ridge
   world:EnterCell(cells.EchoRidge, player)
-
-  coroutine.wrap(periodicSave)()
 end
 
 --[[
