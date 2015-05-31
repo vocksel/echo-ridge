@@ -44,6 +44,12 @@ local function handleWaveStation()
   local popupMsg = "Press [E] to access the Wave World"
   local popupGui = InteractionGui.new(playerGui, popupMsg)
 
+  local function onSkyWaveLeft()
+    skyWave:Hide()
+  end
+
+  skyWaveLeft.OnClientEvent:connect(onSkyWaveLeft)
+
   local function interact(_, inputState)
     if inputState == Enum.UserInputState.End then return end
     skyWave:Show()
@@ -56,15 +62,6 @@ local function handleWaveStation()
     CreateTouchButton = true,
     InputTypes = { Enum.KeyCode.E }
   }
-
-  local function detectOutOfBounds(part)
-    local inBounds = skyWave:PartWithinBoundary(part)
-
-    if not inBounds then
-      skyWave:Hide()
-      skyWaveLeft:FireServer()
-    end
-  end
 
   local function enableInteraction()
     popupGui:Show()
@@ -97,10 +94,6 @@ local function handleWaveStation()
 
       if isAlive(player.Character) then
         setInteractionState(rootPart)
-      end
-
-      if skyWave.Visible then
-        detectOutOfBounds(rootPart)
       end
 
       wait(.25) -- Abritrary delay. It feels good while playtesting.

@@ -135,17 +135,33 @@ local function handleWaveWorld()
   local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
   local skyWaveLeft = getRemoteEvent("SkyWaveLeft")
 
+  local function detectOutOfBounds(player)
+    while true do
+      local character = player.Character
+      local rootPart = character:FindFirstChild("HumanoidRootPart")
+      local inBounds = skyWave:PartWithinBoundary(rootPart)
+
+      if not inBounds then
+        skyWaveLeft:FireClient(player)
+        break
+      end
+
+      wait(.25)
+    end
+  end
+
   local function onSkyWaveEntered(player)
     skyWave:TransIn(player)
     world:EnterCell(cells.SkyWave, player)
+    coroutine.wrap(detectOutOfBounds)(player)
   end
 
   local function onSkyWaveLeft(player)
     world:EnterCell(cells.EchoRidge, player)
   end
 
-  skyWaveLeft.OnServerEvent:connect(onSkyWaveLeft)
   skyWaveEntered.OnServerEvent:connect(onSkyWaveEntered)
+  skyWaveLeft.OnServerEvent:connect(onSkyWaveLeft)
 end
 
 
