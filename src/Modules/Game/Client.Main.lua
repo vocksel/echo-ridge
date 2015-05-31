@@ -90,9 +90,10 @@ local function handleWaveStation()
 
   local function runInteractionLoop()
     while true do
-      local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
+      local character = player.Character
+      local rootPart = character:FindFirstChild("HumanoidRootPart")
 
-      if isAlive(player.Character) then
+      if isAlive(character) then
         setInteractionState(rootPart)
       end
 
