@@ -8,10 +8,10 @@ local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
 local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
-local BindableAction    = import("BindableAction")
-local WaveRoad          = import("WaveRoad")
-local ClientWaveStation = import("ClientWaveStation")
-local InteractionGui    = import("InteractionGui")
+local BindableAction = import("BindableAction")
+local WaveRoad       = import("WaveRoad")
+local WaveStation    = import("WaveStation")
+local InteractionGui = import("InteractionGui")
 
 -- A reference to the player's Character is not saved in a variable. This is
 -- because Nevermore does not reset this script when the player dies.
@@ -33,60 +33,41 @@ end
 --------------------------------------------------------------------------------
 
 local function handleWaveStation()
-  local skyWaveModel     = replicatedStorage.SkyWave
-  local waveStationModel = workspace.SectionBottomLeft.WaveStation
-  local skyWave          = WaveRoad.new(skyWaveModel)
-  local waveStation      = ClientWaveStation.new(waveStationModel)
+  local skyWaveModel = replicatedStorage.SkyWave
+  local skyWave = WaveRoad.new(skyWaveModel)
 
   local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
   local skyWaveLeft = getRemoteEvent("SkyWaveLeft")
 
-  local popupMsg = "Press [E] to access the Wave World"
-  local popupGui = InteractionGui.new(playerGui, popupMsg)
-
   local function onSkyWaveLeft()
     skyWave:Hide()
   end
-
   skyWaveLeft.OnClientEvent:connect(onSkyWaveLeft)
 
-  local function interact(_, inputState)
-    if inputState == Enum.UserInputState.End then return end
-    skyWave:Show()
-    skyWaveEntered:FireServer()
-  end
+  local function getWaveStationComponents()
+    local model = workspace.SectionBottomLeft.WaveStation
 
-  local useWaveStation = BindableAction.FromData{
-    ActionName = "UseWaveStation",
-    FunctionToBind = interact,
-    CreateTouchButton = true,
-    InputTypes = { Enum.KeyCode.E }
-  }
-
-  local function enableInteraction()
-    popupGui:Show()
-    useWaveStation:Bind()
-  end
-
-  local function disableInteraction()
-    popupGui:Hide()
-    useWaveStation:Unbind()
-  end
-
-  local function setInteractionState(rootPart)
-    local inRange = waveStation:PartInRange(rootPart, 10)
-    local actionIsBound = useWaveStation:IsBound()
-
-    -- If an action is bound or unbound twice, an error occurs. To compensate
-    -- for this, we use a flip-flop style logic gate to toggle between bound and
-    -- unbound.
-
-    if inRange and not actionIsBound then
-      enableInteraction()
-    elseif not inRange and actionIsBound then
-      disableInteraction()
+    local function interact(_, inputState)
+      if inputState == Enum.UserInputState.End then return end
+      skyWave:Show()
+      skyWaveEntered:FireServer()
     end
+
+    local action = BindableAction.FromData{
+      ActionName = "UseWaveStation",
+      FunctionToBind = interact,
+      CreateTouchButton = true,
+      InputTypes = { Enum.KeyCode.E }
+    }
+
+    local msg = "Press [E] to access the Wave World"
+    local gui = InteractionGui.new(playerGui, msg)
+
+    return model, action, gui
   end
+
+  local model, action, gui = getWaveStationComponents()
+  local waveStation = WaveStation.new(model, action, gui)
 
   local function runInteractionLoop()
     while true do
@@ -94,7 +75,7 @@ local function handleWaveStation()
       local rootPart = character:FindFirstChild("HumanoidRootPart")
 
       if isAlive(character) then
-        setInteractionState(rootPart)
+        waveStation:SetInteractionState(rootPart)
       end
 
       wait(.25) -- Abritrary delay. It feels good while playtesting.
