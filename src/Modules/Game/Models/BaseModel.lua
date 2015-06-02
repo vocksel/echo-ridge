@@ -46,4 +46,10 @@ function BaseModel:PartWithinBoundary(part)
   return self.Region:CastPart(part)
 end
 
+function BaseModel:PlayerWithinBoundary(player)
+  local character = player.Character
+  local rootPart = character:FindFirstChild("HumanoidRootPart")
+  return self:PartWithinBoundary(rootPart)
+end
+
 return BaseModel

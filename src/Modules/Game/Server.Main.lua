@@ -137,15 +137,10 @@ local function handleWaveWorld()
 
   local function detectOutOfBounds(player)
     while true do
-      local character = player.Character
-      local rootPart = character:FindFirstChild("HumanoidRootPart")
-      local inBounds = skyWave:PartWithinBoundary(rootPart)
-
-      if not inBounds then
+      if not skyWave:PlayerWithinBoundary(player) then
         skyWaveLeft:FireClient(player)
         break
       end
-
       wait(.25)
     end
   end
