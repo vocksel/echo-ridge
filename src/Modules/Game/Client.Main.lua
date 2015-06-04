@@ -5,7 +5,6 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local BindableAction = import("BindableAction")
@@ -33,9 +32,6 @@ end
 --------------------------------------------------------------------------------
 
 local function handleWaveStation()
-  local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
-  local skyWaveLeft = getRemoteEvent("SkyWaveLeft")
-
   local models = {
     SkyWave = replicatedStorage.SkyWave,
     WaveStation = workspace.SectionBottomLeft.WaveStation
@@ -54,7 +50,7 @@ local function handleWaveStation()
 
   local function enterSkyWave()
     skyWave:Show()
-    skyWaveEntered:FireServer()
+    skyWave.Entered:FireServer()
   end
 
   -- This is triggered by the SkyWaveLeft event, and as such does not need to
@@ -77,7 +73,7 @@ local function handleWaveStation()
   end
 
   useWaveStation:BindFunction("Primary", enterSkyWave)
-  skyWaveLeft.OnClientEvent:connect(leaveSkyWave)
+  skyWave.Left.OnClientEvent:connect(leaveSkyWave)
   coroutine.wrap(runInteractionLoop)()
 end
 

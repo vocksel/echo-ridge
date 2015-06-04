@@ -5,7 +5,6 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local WaveRoad = import("WaveRoad")
@@ -132,13 +131,11 @@ end
 local function handleWaveWorld()
   local skyWaveModel = replicatedStorage.SkyWave
   local skyWave = WaveRoad.new(skyWaveModel)
-  local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
-  local skyWaveLeft = getRemoteEvent("SkyWaveLeft")
 
   local function detectOutOfBounds(player)
     while true do
       if not skyWave:PlayerWithinBoundary(player) then
-        skyWaveLeft:FireClient(player)
+        skyWave.Left:FireClient(player)
         break
       end
       wait(.25)
@@ -155,8 +152,8 @@ local function handleWaveWorld()
     world:EnterCell(cells.EchoRidge, player)
   end
 
-  skyWaveEntered.OnServerEvent:connect(onSkyWaveEntered)
-  skyWaveLeft.OnServerEvent:connect(onSkyWaveLeft)
+  skyWave.Entered.OnServerEvent:connect(onSkyWaveEntered)
+  skyWave.Left.OnServerEvent:connect(onSkyWaveLeft)
 end
 
 
