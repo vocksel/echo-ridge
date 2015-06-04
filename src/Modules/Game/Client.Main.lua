@@ -33,41 +33,35 @@ end
 --------------------------------------------------------------------------------
 
 local function handleWaveStation()
-  local skyWaveModel = replicatedStorage.SkyWave
-  local skyWave = WaveRoad.new(skyWaveModel)
-
   local skyWaveEntered = getRemoteEvent("SkyWaveEntered")
   local skyWaveLeft = getRemoteEvent("SkyWaveLeft")
 
-  local function onSkyWaveLeft()
+  local models = {
+    SkyWave = replicatedStorage.SkyWave,
+    WaveStation = workspace.SectionBottomLeft.WaveStation
+  }
+
+  local useWaveStation = BindableAction.FromData{
+    ActionName = "UseWaveStation",
+    CreateTouchButton = true,
+    InputTypes = { Enum.KeyCode.E } }
+  local useWaveStationMsg = "Press [E] to access the Wave World"
+  local useWaveStationGui = InteractionGui.new(playerGui, useWaveStationMsg)
+
+  local skyWave = WaveRoad.new(models.SkyWave)
+  local waveStation = WaveStation.new(models.WaveStation, useWaveStation,
+    useWaveStationGui)
+
+  local function enterSkyWave()
+    skyWave:Show()
+    skyWaveEntered:FireServer()
+  end
+
+  -- This is triggered by the SkyWaveLeft event, and as such does not need to
+  -- fire an event like enterSkyWave does.
+  local function leaveSkyWave()
     skyWave:Hide()
   end
-  skyWaveLeft.OnClientEvent:connect(onSkyWaveLeft)
-
-  local function getWaveStationComponents()
-    local model = workspace.SectionBottomLeft.WaveStation
-
-    local function interact(_, inputState)
-      if inputState == Enum.UserInputState.End then return end
-      skyWave:Show()
-      skyWaveEntered:FireServer()
-    end
-
-    local action = BindableAction.FromData{
-      ActionName = "UseWaveStation",
-      FunctionToBind = interact,
-      CreateTouchButton = true,
-      InputTypes = { Enum.KeyCode.E }
-    }
-
-    local msg = "Press [E] to access the Wave World"
-    local gui = InteractionGui.new(playerGui, msg)
-
-    return model, action, gui
-  end
-
-  local model, action, gui = getWaveStationComponents()
-  local waveStation = WaveStation.new(model, action, gui)
 
   local function runInteractionLoop()
     while true do
@@ -82,6 +76,8 @@ local function handleWaveStation()
     end
   end
 
+  useWaveStation:BindFunction("Primary", enterSkyWave)
+  skyWaveLeft.OnClientEvent:connect(leaveSkyWave)
   coroutine.wrap(runInteractionLoop)()
 end
 
