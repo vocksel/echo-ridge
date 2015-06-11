@@ -1,5 +1,5 @@
 --[[
-  This class gets its name from "Cells" in Bathesda titles. Any interior zone in
+  This class gets its name from "Cells" in Bethesda titles. Any interior zone in
   Skyrim, be it a house or a dungeon, is considered a Cell.
 
   The only difference between Bathesda Cells and this class is that any area in
