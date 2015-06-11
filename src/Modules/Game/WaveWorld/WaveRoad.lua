@@ -39,9 +39,6 @@ function WaveRoad.new(model)
 
   self.EntryPoint = model.TeleportPad
 
-  self.Entered = getRemoteEvent(model.Name.."Entered")
-  self.Left = getRemoteEvent(model.Name.."Left")
-
   return setmetatable(self, WaveRoad)
 end
 

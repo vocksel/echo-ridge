@@ -5,10 +5,10 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
+local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local BindableAction = import("BindableAction")
-local WaveRoad       = import("WaveRoad")
 local WaveStation    = import("WaveStation")
 local InteractionGui = import("InteractionGui")
 
@@ -32,32 +32,24 @@ end
 --------------------------------------------------------------------------------
 
 local function handleWaveStation()
-  local models = {
-    SkyWave = replicatedStorage.SkyWave,
-    WaveStation = workspace.SectionBottomLeft.WaveStation
-  }
-
-  local useWaveStation = BindableAction.FromData{
+  local action = BindableAction.FromData{
     ActionName = "UseWaveStation",
     CreateTouchButton = true,
     InputTypes = { Enum.KeyCode.E } }
-  local useWaveStationMsg = "Press [E] to access the Wave World"
-  local useWaveStationGui = InteractionGui.new(playerGui, useWaveStationMsg)
 
-  local skyWave = WaveRoad.new(models.SkyWave)
-  local waveStation = WaveStation.new(models.WaveStation, useWaveStation,
-    useWaveStationGui)
+  local model = workspace.SectionBottomLeft.WaveStation
 
-  local function enterSkyWave()
-    skyWave:Show()
-    skyWave.Entered:FireServer()
+  local msg = "Press [E] to access the Wave World"
+  local gui = InteractionGui.new(playerGui, msg)
+
+  local waveStationUsed = getRemoteEvent("WaveStationUsed")
+  local waveStation = WaveStation.new(model, action, gui)
+
+  local function enterSkyWave(_, inputState)
+    if inputState == Enum.UserInputState.End then return end
+    waveStationUsed:FireServer()
   end
-
-  -- This is triggered by the SkyWaveLeft event, and as such does not need to
-  -- fire an event like enterSkyWave does.
-  local function leaveSkyWave()
-    skyWave:Hide()
-  end
+  action:BindFunction("Primary", enterSkyWave)
 
   local function runInteractionLoop()
     while true do
@@ -72,8 +64,6 @@ local function handleWaveStation()
     end
   end
 
-  useWaveStation:BindFunction("Primary", enterSkyWave)
-  skyWave.Left.OnClientEvent:connect(leaveSkyWave)
   coroutine.wrap(runInteractionLoop)()
 end
 
