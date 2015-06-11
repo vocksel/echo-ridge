@@ -15,8 +15,8 @@ local InteractionGui = import("InteractionGui")
 -- A reference to the player's Character is not saved in a variable. This is
 -- because Nevermore does not reset this script when the player dies.
 --
--- Storing player.Character in a variable will eventually point to an old
--- character model once the player dies.
+-- Storing player.Character in a variable will point to an old character model
+-- once the player dies.
 
 local player = players.LocalPlayer
 local playerGui = player.PlayerGui
