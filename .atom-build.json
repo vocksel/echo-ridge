@@ -1,6 +1,0 @@
-{
-  "cmd": "lua",
-  "args": ["build.lua"],
-  "sh": false,
-  "cwd": "{PROJECT_PATH}"
-}
