@@ -45,10 +45,9 @@ local BaseModel = {}
 BaseModel.__index = BaseModel
 
 function BaseModel.new(model)
-  local self = {}
-
   assert(model.PrimaryPart, "The PrimaryPart property is required")
 
+  local self = {}
   local padding = getMaxPlayerHeight()
 
   self.Model = model

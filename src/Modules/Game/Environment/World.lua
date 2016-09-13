@@ -27,9 +27,9 @@ local World = {}
 World.__index = World
 
 function World.new(cellList)
-  local self = {}
-
   assert(cellList, "World.new() requires a table of Cell instances")
+
+  local self = {}
 
   -- A collection of Cell instances that the player can travel to.
   self.Cells = cellList

@@ -23,9 +23,9 @@ WaveRoad.__index = WaveRoad
 setmetatable(WaveRoad, BaseModel)
 
 function WaveRoad.new(model)
-  local self = BaseModel.new(model)
-
   assert(model:FindFirstChild("TeleportPad"), tostring(model).." needs a Part named \"TeleportPad\".")
+
+  local self = BaseModel.new(model)
 
   -- Keep the original parent in memory so that the Wave Road can be moved back
   -- later (Thus hiding it from view).
