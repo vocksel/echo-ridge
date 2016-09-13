@@ -6,14 +6,36 @@ local import = nevermore.LoadLibrary
 
 local Region = import("Region")
 
-local function createRegionFromModel(model)
+local function getMaxPlayerHeight()
+  local playerHeight = 4
+  local jumpHeight = 8
+  return playerHeight + jumpHeight
+end
+
+local function getDimensions(model)
   -- GetModelCFrame is deprecated, but there does not seem to be an alternative.
   local position = model:GetModelCFrame()
   local size = model:GetExtentsSize()
 
-  return Region.new(position, size)
+  return position, size
 end
 
+local function adjustForPadding(position, size, padding)
+  local paddedPosition = position + Vector3.new(0, padding/2, 0)
+  local paddedSize = size + Vector3.new(0, padding, 0)
+
+  return paddedPosition, paddedSize
+end
+
+local function createRegion(model, padding)
+  local position, size = getDimensions(model)
+
+  if padding then
+    position, size = adjustForPadding(position, size, padding)
+  end
+
+  return Region.new(position, size)
+end
 
 --------------------------------------------------------------------------------
 -- Base Model
@@ -27,9 +49,11 @@ function BaseModel.new(model)
 
   assert(model.PrimaryPart, "The PrimaryPart property is required")
 
+  local padding = getMaxPlayerHeight()
+
   self.Model = model
   self.PrimaryPart = model.PrimaryPart
-  self.Region = createRegionFromModel(model)
+  self.Region = createRegion(model, padding)
 
   return setmetatable(self, BaseModel)
 end
