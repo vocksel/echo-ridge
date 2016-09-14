@@ -3,13 +3,10 @@
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
-
-local remotes = import("Remotes")
-local BindableAction = import("BindableAction")
-local InteractableObject = import("InteractableObject")
-local InteractionGui = import("InteractionGui")
+local remotes = require(replicatedStorage.Events.Remotes)
+local BindableAction = require(replicatedStorage.Input.BindableAction)
+local InteractableObject = require(replicatedStorage.Models.InteractableObject)
+local InteractionGui = require(replicatedStorage.UI.InteractionGui)
 
 -- A reference to the player's Character is not saved in a variable. This is
 -- because Nevermore does not reset this script when the player dies.
@@ -72,7 +69,6 @@ end
 --------------------------------------------------------------------------------
 
 local function initialize()
-  nevermore.ClearSplash()
   handleWaveStation()
 end
 

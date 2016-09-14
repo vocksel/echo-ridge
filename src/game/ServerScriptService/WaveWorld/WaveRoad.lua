@@ -1,9 +1,6 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
-
-local BaseModel = import("BaseModel")
+local BaseModel = require(replicatedStorage.Models.BaseModel)
 
 local function teleportOnTop(model, part)
   local boundingBox = model:GetExtentsSize()

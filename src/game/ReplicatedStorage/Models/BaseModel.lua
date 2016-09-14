@@ -1,9 +1,6 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
-
-local Region = import("Region")
+local Region = require(replicatedStorage.Regions.Region)
 
 local function getMaxPlayerHeight()
   local playerHeight = 4

@@ -8,10 +8,7 @@
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
-
-local Signal = import("Signal")
+local Signal = require(replicatedStorage.Events.Signal)
 
 local Cell = {}
 Cell.__index = Cell

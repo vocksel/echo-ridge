@@ -15,13 +15,9 @@
 --]]
 
 local dataStoreService = game:GetService("DataStoreService")
-local replicatedStorage = game:GetService("ReplicatedStorage")
-
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
 
 if game.PlaceId == 0 then
-  dataStoreService = import("MockDataStoreService")
+  dataStoreService = require(script.Parent.MockDataStoreService)
 end
 
 local DataStore = {}

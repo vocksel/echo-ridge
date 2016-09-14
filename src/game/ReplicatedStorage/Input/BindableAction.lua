@@ -1,11 +1,8 @@
 local ReplicatedStorage    = game:GetService("ReplicatedStorage")
 local ContextActionService = game:GetService("ContextActionService")
 
-local NevermoreEngine      = require(ReplicatedStorage:WaitForChild("NevermoreEngine"))
-local LoadCustomLibrary    = NevermoreEngine.LoadLibrary
-
-local Signal               = LoadCustomLibrary("Signal")
-local MakeMaid             = LoadCustomLibrary("Maid").MakeMaid
+local Signal = require(ReplicatedStorage.Events.Signal)
+local MakeMaid = require(ReplicatedStorage.Events.Maid).MakeMaid
 
 --- Translates the ContextActionService binding into an OOP object with event-based properties.
 -- @author Quenty

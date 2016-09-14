@@ -1,9 +1,4 @@
-local replicatedStorage = game:GetService("ReplicatedStorage")
-
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
-
-local DataStore = import("DataStore")
+local DataStore = require(script.Parent.DataStore)
 
 --------------------------------------------------------------------------------
 -- Player Data

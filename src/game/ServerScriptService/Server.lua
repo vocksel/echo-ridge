@@ -1,14 +1,12 @@
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
+local serverScripts = game:GetService("ServerScriptService")
 
-local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local import = nevermore.LoadLibrary
-
-local remotes = import("Remotes")
-local WaveRoad = import("WaveRoad")
-local PlayerData = import("PlayerData")
-local World = import("World")
-local Cell = import("Cell")
+local remotes = require(replicatedStorage.Events.Remotes)
+local WaveRoad = require(serverScripts.WaveWorld.WaveRoad)
+local PlayerData = require(serverScripts.Data.PlayerData)
+local World = require(serverScripts.Environment.World)
+local Cell = require(serverScripts.Environment.Cell)
 
 local cells = {
   EchoRidge = Cell.new("EchoRidge"),
@@ -179,7 +177,6 @@ end
 --------------------------------------------------------------------------------
 
 local function initialize()
-  nevermore.SetRespawnTime(3)
   configureServices()
   handleExistingPlayers()
   handleWaveWorld()
