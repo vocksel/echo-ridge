@@ -1,4 +1,3 @@
--- Name: Client.Main
 -- ClassName: LocalScript
 
 local players = game:GetService("Players")

@@ -1,6 +1,3 @@
--- Name: Server.Main
--- ClassName: Script
-
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
