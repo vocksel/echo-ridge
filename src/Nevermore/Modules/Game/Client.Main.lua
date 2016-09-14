@@ -9,7 +9,7 @@ local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
 local BindableAction = import("BindableAction")
-local WaveStation    = import("WaveStation")
+local InteractableObject = import("InteractableObject")
 local InteractionGui = import("InteractionGui")
 
 -- A reference to the player's Character is not saved in a variable. This is
@@ -43,7 +43,7 @@ local function handleWaveStation()
   local gui = InteractionGui.new(playerGui, msg)
 
   local waveStationUsed = getRemoteEvent("WaveStationUsed")
-  local waveStation = WaveStation.new(model, action, gui)
+  local waveStation = InteractableObject.new(model, action, gui)
 
   local function enterSkyWave(_, inputState)
     if inputState == Enum.UserInputState.End then return end

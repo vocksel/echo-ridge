@@ -1,4 +1,3 @@
-
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
@@ -10,30 +9,30 @@ local BaseModel = import("BaseModel")
 -- Wave Station
 --------------------------------------------------------------------------------
 
-local WaveStation = {}
-WaveStation.__index = WaveStation
+local InteractableObject = {}
+InteractableObject.__index = InteractableObject
 
-function WaveStation.new(model, action, gui)
+function InteractableObject.new(model, action, gui)
   local self = {}
 
   self.Model = BaseModel.new(model)
   self.Action = action
   self.PopupGui = gui
 
-  return setmetatable(self, WaveStation)
+  return setmetatable(self, InteractableObject)
 end
 
-function WaveStation:AllowInteraction()
+function InteractableObject:AllowInteraction()
   self.PopupGui:Show()
   self.Action:Bind()
 end
 
-function WaveStation:DenyInteraction()
+function InteractableObject:DenyInteraction()
   self.PopupGui:Hide()
   self.Action:Unbind()
 end
 
-function WaveStation:SetInteractionState(rootPart)
+function InteractableObject:SetInteractionState(rootPart)
   local inRange = self.Model:PartInRange(rootPart, 10)
   local actionIsBound = self.Action:IsBound()
 
@@ -48,4 +47,4 @@ function WaveStation:SetInteractionState(rootPart)
   end
 end
 
-return WaveStation
+return InteractableObject
