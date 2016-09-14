@@ -5,9 +5,9 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
+local remotes = import("Remotes")
 local WaveRoad = import("WaveRoad")
 local PlayerData = import("PlayerData")
 local World = import("World")
@@ -132,7 +132,7 @@ end
 local function handleWaveWorld()
   local skyWaveModel = replicatedStorage.SkyWave
   local skyWave = WaveRoad.new(skyWaveModel)
-  local waveStationUsed = getRemoteEvent("WaveStationUsed")
+  local waveStationUsed = remotes.getEvent("WaveStationUsed")
 
   -- Always move players between cells *before* calling this function. The Sky
   -- Wave's player list needs to be up-to-date before checking if it should be

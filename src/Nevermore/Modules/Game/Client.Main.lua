@@ -5,9 +5,9 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local nevermore = require(replicatedStorage:WaitForChild("NevermoreEngine"))
-local getRemoteEvent = nevermore.GetRemoteEvent
 local import = nevermore.LoadLibrary
 
+local remotes = import("Remotes")
 local BindableAction = import("BindableAction")
 local InteractableObject = import("InteractableObject")
 local InteractionGui = import("InteractionGui")
@@ -42,7 +42,7 @@ local function handleWaveStation()
   local msg = "Press [E] to access the Wave World"
   local gui = InteractionGui.new(playerGui, msg)
 
-  local waveStationUsed = getRemoteEvent("WaveStationUsed")
+  local waveStationUsed = remotes.getEvent("WaveStationUsed")
   local waveStation = InteractableObject.new(model, action, gui)
 
   local function enterSkyWave(_, inputState)
