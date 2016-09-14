@@ -6,7 +6,7 @@ local import = nevermore.LoadLibrary
 local BaseModel = import("BaseModel")
 
 --------------------------------------------------------------------------------
--- Wave Station
+-- InteractableObject
 --------------------------------------------------------------------------------
 
 local InteractableObject = {}
