@@ -1,4 +1,3 @@
-
 local InteractionGui = {}
 InteractionGui.__index = InteractionGui
 
