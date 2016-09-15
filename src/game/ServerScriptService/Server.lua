@@ -28,11 +28,6 @@ local function configurePlayer(player)
   player.CameraMaxZoomDistance = 100
 end
 
-local function configureCharacter(character)
-  local humanoid = character.Humanoid
-  humanoid.NameOcclusion = "OccludeAll"
-end
-
 
 --------------------------------------------------------------------------------
 -- Player Handling
@@ -50,10 +45,6 @@ local function onPlayerAdded(player)
   local data = PlayerData.new(player)
   data:AutoSave()
 
-  local function onChaarcterAdded(character)
-    configureCharacter(character)
-  end
-
   local function onPlayerRemoving(leavingPlayer)
     if player == leavingPlayer then
       data:Save()
@@ -61,7 +52,6 @@ local function onPlayerAdded(player)
     end
   end
 
-  player.CharacterAdded:connect(onChaarcterAdded)
   players.PlayerRemoving:connect(onPlayerRemoving)
 
   configurePlayer(player)
