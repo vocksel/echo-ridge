@@ -17,7 +17,7 @@ local world = World.new(cells)
 
 
 --------------------------------------------------------------------------------
--- Startup
+-- Player Handling
 --------------------------------------------------------------------------------
 
 local function configurePlayer(player)
@@ -28,37 +28,22 @@ local function configurePlayer(player)
   player.CameraMaxZoomDistance = 100
 end
 
-
---------------------------------------------------------------------------------
--- Player Handling
---------------------------------------------------------------------------------
-
---[[
-  Internal: Runs tasks on a newly joined Player
-
-  An anonymous function can not be used in this case, because this function has
-  to run both when PlayerAdded fires and when a Player is in solo mode.
-
-  player - The Player that just joined the game.
---]]
-local function onPlayerAdded(player)
+players.PlayerAdded:connect(function(player)
   local data = PlayerData.new(player)
   data:AutoSave()
 
-  local function onPlayerRemoving(leavingPlayer)
+  players.PlayerRemoving:connect(function(leavingPlayer)
     if player == leavingPlayer then
       data:Save()
       world:LeaveCurrentCell(player)
     end
-  end
-
-  players.PlayerRemoving:connect(onPlayerRemoving)
+  end)
 
   configurePlayer(player)
 
   -- Start the player off in Echo Ridge
   world:EnterCell(cells.EchoRidge, player)
-end
+end)
 
 
 --------------------------------------------------------------------------------
@@ -119,7 +104,6 @@ end
 
 local function initialize()
   handleWaveWorld()
-  players.PlayerAdded:connect(onPlayerAdded)
 end
 
 initialize()
