@@ -9,10 +9,18 @@ local run = game:GetService("RunService")
 
 camera.FieldOfView = FIELD_OF_VIEW
 
+local function lookAt(pos)
+  local cameraPos = pos + OFFSET
+  camera.CoordinateFrame = CFrame.new(cameraPos, pos)
+end
+
 local function onRenderStep()
-  local playerPosition = player.Character.Torso.Position
-  local cameraPosition = playerPosition + OFFSET
-  camera.CoordinateFrame = CFrame.new(cameraPosition, playerPosition)
+  local character = player.Character
+  local primaryPart = character.PrimaryPart
+
+  if character and primaryPart then
+    lookAt(primaryPart.Position)
+  end
 end
 
 run:BindToRenderStep("Camera", Enum.RenderPriority.Camera.Value, onRenderStep)
