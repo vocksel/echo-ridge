@@ -51,32 +51,17 @@ end)
 --------------------------------------------------------------------------------
 
 local function handleWaveWorld()
-  local skyWaveModel = replicatedStorage.SkyWave
+  local skyWaveModel = workspace.SkyWave
   local skyWave = WaveRoad.new(skyWaveModel)
   local waveStationUsed = remotes.getEvent("WaveStationUsed")
 
-  -- Always move players between cells *before* calling this function. The Sky
-  -- Wave's player list needs to be up-to-date before checking if it should be
-  -- shown or hidden.
-  local function setSkyWaveVisibility()
-    local skyWavePlayers = cells.SkyWave:GetPlayers()
-
-    if #skyWavePlayers == 1 then
-      skyWave:Show()
-    elseif #skyWavePlayers == 0 then
-      skyWave:Hide()
-    end
-  end
-
   local function enterSkyWave(player)
     world:EnterCell(cells.SkyWave, player)
-    setSkyWaveVisibility()
     skyWave:TransIn(player)
   end
 
   local function leaveSkyWave(player)
     world:EnterCell(cells.EchoRidge, player)
-    setSkyWaveVisibility()
   end
 
   local function detectOutOfBounds(player)
