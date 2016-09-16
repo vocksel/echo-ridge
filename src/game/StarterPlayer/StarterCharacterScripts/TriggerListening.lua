@@ -21,24 +21,33 @@
 local players = game:GetService("Players")
 local contextAction = game:GetService("ContextActionService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
+local run = game:GetService("RunService")
 
 local ACTION_NAME = "Interact"
 local ACTION_KEY = Enum.KeyCode.E
 
 local remotes = require(replicatedStorage.Events.Remotes)
+local Region = require(replicatedStorage.Regions.Region)
 
 local getTriggers = remotes.getFunction("GetInteractionTriggers")
 local triggerAdded = remotes.getEvent("TriggerAdded")
 local triggerRemoved = remotes.getEvent("TriggerRemoved")
 
 local player = players.LocalPlayer
+local character = player.Character
+local rootPart = character:FindFirstChild("HumanoidRootPart")
 
 -- Checks if `part` is the clients HumanoidRootPart.
 --
 -- This is used when checking what touched the trigger so that we only have to
 -- worry about a single part and none of the other limbs/hats.
 local function isClientsRootPart(part)
-  return part == player.Character.HumanoidRootPart
+  return part == rootPart
+end
+
+-- Checks if the player is within the given region.
+local function playerIsInRegion(region)
+  return region:CastPart(rootPart)
 end
 
 -- Fires the event that was set for `trigger`.
@@ -49,37 +58,27 @@ local function runTriggerEvent(trigger)
   event:FireServer()
 end
 
--- Fired when the trigger is touched.
+-- Unbinds the interaction action if the player is outside of `region`.
 --
--- This is what sets up the interaction code so the player can actually interact
--- with the triggers.
-local function onTriggerTouched(trigger, otherPart)
-  if isClientsRootPart(otherPart) then
-    local function action(_, inputState)
-      if inputState == Enum.UserInputState.End then return end
-      runTriggerEvent(trigger)
+-- This is used to make sure the player is still inside of the trigger. Once
+-- they're not we need to unbind the action so they can't interact from across
+-- the map.
+--
+-- Previously we were using the TouchEnded event instead of a region loop. This
+-- almost satisfied our needs, but it had a very big problem where if you
+-- teleport the user outside of the trigger, TouchEnded wouldn't fire.
+--
+-- This left the interact action still bound, so the client could teleport to
+-- the Wave Road from any location. We're now using a region check to be
+-- absolutely sure if the player is still inside the trigger or not.
+local function unbindIfOutOfRegion(region)
+  local conn
+  conn = run.Heartbeat:connect(function()
+    if not playerIsInRegion(region) then
+      contextAction:UnbindAction(ACTION_NAME)
+      conn:disconnect()
     end
-
-    contextAction:BindAction(ACTION_NAME, action, true, ACTION_KEY)
-  end
-end
-
--- Fired when the player leaves the trigger.
---
--- Simply unbinds the event so the player can't interact anymore.
---
--- BUG: If the player is teleported out of the trigger, this will not fire. So
--- currently we have a pretty big problem of the player being able to
--- continuously interact even when they're on the Sky Wave, thus teleporting
--- them back to the teleport pad.
---
--- This will be removed or reworked to function properly in the future. Right
--- now its being kept because it /kinda/ works, and we just need to get all
--- these interaction changes commited.
-local function onTriggerTouchEnded(_, otherPart)
-  if isClientsRootPart(otherPart) then
-    contextAction:UnbindAction(ACTION_NAME)
-  end
+  end)
 end
 
 -- Hooks up all the events for a trigger.
@@ -87,12 +86,18 @@ end
 -- We have to pass in an anonymous function because we need the trigger later
 -- on down the line when we get to user itneraction.
 local function connectTriggerEvents(trigger)
-  trigger.Touched:connect(function(...)
-    onTriggerTouched(trigger, ...)
-  end)
+  local region = Region.FromPart(trigger)
 
-  trigger.TouchEnded:connect(function(...)
-    onTriggerTouchEnded(trigger, ...)
+  local function action(_, inputState)
+    if inputState == Enum.UserInputState.End then return end
+    runTriggerEvent(trigger)
+  end
+
+  trigger.Touched:connect(function(otherPart)
+    if isClientsRootPart(otherPart) then
+      contextAction:BindAction(ACTION_NAME, action, true, ACTION_KEY)
+      unbindIfOutOfRegion(region)
+    end
   end)
 end
 
