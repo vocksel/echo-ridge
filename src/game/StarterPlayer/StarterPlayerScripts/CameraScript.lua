@@ -16,10 +16,10 @@ end
 
 local function onRenderStep()
   local character = player.Character
-  local primaryPart = character.PrimaryPart
+  local rootPart = character:FindFirstChild("HumanoidRootPart")
 
-  if character and primaryPart then
-    lookAt(primaryPart.Position)
+  if character and rootPart then
+    lookAt(rootPart.Position)
   end
 end
 
