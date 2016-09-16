@@ -82,33 +82,17 @@ local function onTriggerTouchEnded(_, otherPart)
   end
 end
 
--- Connection functions for Touched and TouchEnded.
+-- Hooks up all the events for a trigger.
 --
 -- We have to pass in an anonymous function because we need the trigger later
 -- on down the line when we get to user itneraction.
-local function connectTriggerTouched(trigger)
-  return trigger.Touched:connect(function(...)
+local function connectTriggerEvents(trigger)
+  trigger.Touched:connect(function(...)
     onTriggerTouched(trigger, ...)
   end)
-end
 
-local function connectTriggerTouchEnded(trigger)
-  return trigger.TouchEnded:connect(function(...)
+  trigger.TouchEnded:connect(function(...)
     onTriggerTouchEnded(trigger, ...)
-  end)
-end
-
--- Hooks up all the events for the trigger and makes sure everything is cleaned
--- up properly when it's removed.
-local function connectTriggerEvents(trigger)
-  local touchedConn = connectTriggerTouched(trigger)
-  local touchEndedConn = connectTriggerTouchEnded(trigger)
-
-  triggerRemoved.OnClientEvent:connect(function(removedTrigger)
-    if removedTrigger == trigger then
-      touchedConn:disconnect()
-      touchEndedConn:disconnect()
-    end
   end)
 end
 

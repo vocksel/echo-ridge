@@ -27,8 +27,12 @@ local remotes = require(replicatedStorage.Events.Remotes)
 -- triggers are added/removed, and then connecting touched events.
 local remotelyGetTriggers = remotes.getFunction("GetInteractionTriggers")
 
+-- Alerts the client when a new trigger has been added so they can hook up the
+-- events locally.
+--
+-- We don't need to worry about removing triggers on the client as we don't keep
+-- a list of them. The only place we have to remove them is on the server.
 local triggerAdded = remotes.getEvent("TriggerAdded")
-local triggerRemoved = remotes.getEvent("TriggerRemoved")
 
 --------------------------------------------------------------------------------
 
@@ -100,7 +104,6 @@ TRIGGER_LOCATION.DescendantRemoving:connect(function(inst)
   if isTrigger(inst) then
     local index = getIndexInList(triggers, inst)
     if index then
-      triggerRemoved:FireAllClients(inst)
       table.remove(triggers, index)
     end
   end
