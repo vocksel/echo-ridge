@@ -49,13 +49,14 @@ local triggerAdded = remotes.getEvent("TriggerAdded")
   `instances` will now be a table of all the instances in Workspace that have a
   Configuration inside of them.
 --]]
-local function find(parent, callback)
+local function find(parent, callback, found)
   local children = parent:GetChildren()
-  local found = {}
+  local found = found or {}
   for _, child in ipairs(children) do
     if callback(child) then
       table.insert(found, child)
     end
+    find(child, callback, found)
   end
   return found
 end
