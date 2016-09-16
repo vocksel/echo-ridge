@@ -109,12 +109,8 @@ local function connectExistingTriggers()
   end
 end
 
--- Connects any new triggers that get added.
-local function connectNewTriggers()
-  triggerAdded.OnClientEvent:connect(function(addedTrigger)
-    connectTriggerEvents(addedTrigger)
-  end)
-end
-
 connectExistingTriggers()
-connectNewTriggers()
+
+triggerAdded.OnClientEvent:connect(function(addedTrigger)
+  connectTriggerEvents(addedTrigger)
+end)
