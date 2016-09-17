@@ -1,6 +1,6 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local Region = require(replicatedStorage.Regions.Region)
+local Region = require(replicatedStorage.Region)
 
 local function getMaxPlayerHeight()
   local playerHeight = 4
@@ -10,7 +10,10 @@ end
 
 local function getDimensions(model)
   -- GetModelCFrame is deprecated, but there does not seem to be an alternative.
-  local position = model:GetModelCFrame()
+  --
+  -- We're getting the position to pass off to the Region constructor. It only
+  -- Accepts Vector3s.
+  local position = model:GetModelCFrame().p
   local size = model:GetExtentsSize()
 
   return position, size
@@ -62,13 +65,12 @@ function BaseModel:PartInRange(part, maxDistance)
 end
 
 function BaseModel:PartWithinBoundary(part)
-  return self.Region:CastPart(part)
+  return self.Region:PartIsInRegion(part)
 end
 
 function BaseModel:PlayerWithinBoundary(player)
   local character = player.Character
-  local rootPart = character:FindFirstChild("HumanoidRootPart")
-  return self:PartWithinBoundary(rootPart)
+  return self.Region:CharacterIsInRegion(character)
 end
 
 return BaseModel

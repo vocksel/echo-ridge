@@ -27,7 +27,7 @@ local ACTION_NAME = "Interact"
 local ACTION_KEY = Enum.KeyCode.E
 
 local remotes = require(replicatedStorage.Events.Remotes)
-local Region = require(replicatedStorage.Regions.Region)
+local Region = require(replicatedStorage.Region)
 
 local getTriggers = remotes.getFunction("GetInteractionTriggers")
 local triggerAdded = remotes.getEvent("TriggerAdded")
@@ -43,11 +43,6 @@ local rootPart = character:FindFirstChild("HumanoidRootPart")
 -- worry about a single part and none of the other limbs/hats.
 local function isClientsRootPart(part)
   return part == rootPart
-end
-
--- Checks if the player is within the given region.
-local function playerIsInRegion(region)
-  return region:CastPart(rootPart)
 end
 
 -- Fires the event that was set for `trigger`.
@@ -74,7 +69,7 @@ end
 local function unbindIfOutOfRegion(region)
   local conn
   conn = run.Heartbeat:connect(function()
-    if not playerIsInRegion(region) then
+    if not region:CharacterIsInRegion(character) then
       contextAction:UnbindAction(ACTION_NAME)
       conn:disconnect()
     end
@@ -86,7 +81,7 @@ end
 -- We have to pass in an anonymous function because we need the trigger later
 -- on down the line when we get to user itneraction.
 local function connectTriggerEvents(trigger)
-  local region = Region.FromPart(trigger)
+  local region = Region.fromPart(trigger)
 
   local function action(_, inputState)
     if inputState == Enum.UserInputState.End then return end
