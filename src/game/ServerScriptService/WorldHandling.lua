@@ -4,7 +4,6 @@ local serverScripts = game:GetService("ServerScriptService")
 
 local remotes = require(replicatedStorage.Events.Remotes)
 local WaveRoad = require(serverScripts.WaveWorld.WaveRoad)
-local PlayerData = require(serverScripts.Data.PlayerData)
 local World = require(serverScripts.Environment.World)
 local Cell = require(serverScripts.Environment.Cell)
 
@@ -15,40 +14,15 @@ local cells = {
 
 local world = World.new(cells)
 
-
---------------------------------------------------------------------------------
--- Player Handling
---------------------------------------------------------------------------------
-
-local function configurePlayer(player)
-  -- Health does not play a part in the game and can be hidden from view.
-  player.HealthDisplayDistance = 0
-
-  -- Reduces the massive default zoom (400). Nobody needs to zoom out that far.
-  player.CameraMaxZoomDistance = 100
-end
-
 players.PlayerAdded:connect(function(player)
-  local data = PlayerData.new(player)
-  data:AutoSave()
-
   players.PlayerRemoving:connect(function(leavingPlayer)
     if player == leavingPlayer then
-      data:Save()
       world:LeaveCurrentCell(player)
     end
   end)
-
-  configurePlayer(player)
-
   -- Start the player off in Echo Ridge
   world:EnterCell(cells.EchoRidge, player)
 end)
-
-
---------------------------------------------------------------------------------
--- Wave World
---------------------------------------------------------------------------------
 
 local function handleWaveWorld()
   local skyWaveModel = workspace.SkyWave
@@ -82,13 +56,4 @@ local function handleWaveWorld()
   waveStationUsed.OnServerEvent:connect(onWaveStationUsed)
 end
 
-
---------------------------------------------------------------------------------
--- Initialization
---------------------------------------------------------------------------------
-
-local function initialize()
-  handleWaveWorld()
-end
-
-initialize()
+handleWaveWorld()
