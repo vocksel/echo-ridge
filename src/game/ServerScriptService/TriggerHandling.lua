@@ -14,11 +14,11 @@
   game.StarterPlayer.StarterCharacterScripts.TriggerListening
 --]]
 
--- This is where we'll recurse through to look for triggers.
-local TRIGGER_LOCATION = workspace
-
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local remotes = require(replicatedStorage.Events.Remotes)
+
+-- This is where we'll recurse through to look for triggers.
+local TRIGGER_LOCATION = workspace
 
 -- This allows the client to get the current list of triggers so they can hook
 -- up the touch events.
