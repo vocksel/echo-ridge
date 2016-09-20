@@ -1,17 +1,13 @@
 --[[
-  Takes care of locating all the triggers in the game.
+  Collects all of the Parts for Trigger instances.
 
-  A trigger is a Part that represents an area in the game world that the user
-  can interact with something from.
+  A Trigger is a class that takes in a Part. The Part represents an area in the
+  game world that the user can perform an action from. For example, a Trigger is
+  placed in front of the Wave Station. While your character is inside the
+  Trigger, you can press a key to enter the Wave World.
 
-  For example, a trigger is placed in front of the Wave Station. While your
-  character is inside the trigger, you can press a key to enter the Wave World.
-
-  Triggers are similar to Region3s, except it's just a single Part that can be
-  rotated and seen visually (though they're set invisible for production.)
-
-  View the client-side code at:
-  game.StarterPlayer.StarterCharacterScripts.TriggerListening
+  This script is used to gather up all of those Parts so that the client can
+  request them and instatiate new Triggers.
 --]]
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -25,14 +21,14 @@ local TRIGGER_LOCATION = workspace
 --
 -- From there, everything is handled by the server letting the client know when
 -- triggers are added/removed, and then connecting touched events.
-local remotelyGetTriggers = remotes.getFunction("GetInteractionTriggers")
+local remotelyGetTriggers = remotes.getFunction("GetTriggerParts")
 
 -- Alerts the client when a new trigger has been added so they can hook up the
 -- events locally.
 --
 -- We don't need to worry about removing triggers on the client as we don't keep
 -- a list of them. The only place we have to remove them is on the server.
-local triggerAdded = remotes.getEvent("TriggerAdded")
+local triggerPartAdded = remotes.getEvent("TriggerPartAdded")
 
 --------------------------------------------------------------------------------
 
@@ -75,12 +71,12 @@ end
 
 --------------------------------------------------------------------------------
 
-local function isTrigger(part)
+local function isTriggerPart(part)
   return part:FindFirstChild("TriggerData")
 end
 
-local function getTriggers()
-  return find(TRIGGER_LOCATION, isTrigger)
+local function getTriggerParts()
+  return find(TRIGGER_LOCATION, isTriggerPart)
 end
 
 --[[
@@ -92,24 +88,24 @@ end
   keeps them all on the same page in terms of what triggers can be used.
 --]]
 
-local triggers = getTriggers()
+local triggerParts = getTriggerParts()
 
 TRIGGER_LOCATION.DescendantAdded:connect(function(inst)
-  if isTrigger(inst) and not isInList(triggers, inst) then
-    triggerAdded:FireAllClients(inst)
-    table.insert(triggers, inst)
+  if isTriggerPart(inst) and not isInList(triggers, inst) then
+    triggerPartAdded:FireAllClients(inst)
+    table.insert(triggerParts, inst)
   end
 end)
 
 TRIGGER_LOCATION.DescendantRemoving:connect(function(inst)
-  if isTrigger(inst) then
+  if isTriggerPart(inst) then
     local index = getIndexInList(triggers, inst)
     if index then
-      table.remove(triggers, index)
+      table.remove(triggerParts, index)
     end
   end
 end)
 
 function remotelyGetTriggers.OnServerInvoke()
-  return triggers
+  return triggerParts
 end
