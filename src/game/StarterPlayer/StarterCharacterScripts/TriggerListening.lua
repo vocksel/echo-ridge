@@ -15,13 +15,10 @@
 --]]
 
 local players = game:GetService("Players")
-local contextAction = game:GetService("ContextActionService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local ACTION_NAME = "Interact"
-local ACTION_KEY = Enum.KeyCode.E
-
 local remotes = require(replicatedStorage.Events.Remotes)
+local Interact = require(replicatedStorage.Interaction.Interact)
 local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
 
 local getTriggers = remotes.getFunction("GetTriggerParts")
@@ -33,19 +30,21 @@ local character = player.Character or player.CharacterAdded:wait()
 
 local function setupTrigger(triggerPart)
   local trigger = CharacterTrigger.new(triggerPart, character)
+  local interact = Interact.new()
+
   trigger:Connect()
 
-  local function action(_, inputState)
+  interact:SetBoundFunction(function(inputState)
     if inputState == Enum.UserInputState.End then return end
     trigger:FireEvent()
-  end
+  end)
 
   trigger.CharacterEntered:connect(function()
-    contextAction:BindAction(ACTION_NAME, action, true, ACTION_KEY)
+    interact:Bind()
   end)
 
   trigger.CharacterLeft:connect(function()
-    contextAction:UnbindAction(ACTION_NAME)
+    interact:Unbind()
   end)
 end
 
