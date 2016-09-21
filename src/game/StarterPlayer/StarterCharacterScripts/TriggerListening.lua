@@ -22,8 +22,6 @@ local Interact = require(replicatedStorage.Interaction.Interact)
 local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
 
 local getTriggers = remotes.getFunction("GetTriggerParts")
-local triggerAdded = remotes.getEvent("TriggerPartAdded")
-local triggerRemoved = remotes.getEvent("TriggerRemoved")
 
 local player = players.LocalPlayer
 local character = player.Character or player.CharacterAdded:wait()
@@ -56,4 +54,3 @@ local function setupExistingTriggers()
 end
 
 setupExistingTriggers()
-triggerAdded.OnClientEvent:connect(setupTrigger)

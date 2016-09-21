@@ -23,13 +23,6 @@ local TRIGGER_LOCATION = workspace
 -- triggers are added/removed, and then connecting touched events.
 local remotelyGetTriggers = remotes.getFunction("GetTriggerParts")
 
--- Alerts the client when a new trigger has been added so they can hook up the
--- events locally.
---
--- We don't need to worry about removing triggers on the client as we don't keep
--- a list of them. The only place we have to remove them is on the server.
-local triggerPartAdded = remotes.getEvent("TriggerPartAdded")
-
 --------------------------------------------------------------------------------
 
 --[[
@@ -57,20 +50,6 @@ local function find(parent, callback, found)
   return found
 end
 
-local function getIndexInList(list, item)
-  for i=1, #list do
-    if list[i] == item then
-      return i
-    end
-  end
-end
-
-local function isInList(list, item)
-  return type(getIndexInList(list, item)) == "number"
-end
-
---------------------------------------------------------------------------------
-
 local function isTriggerPart(part)
   return part:FindFirstChild("TriggerData")
 end
@@ -79,33 +58,12 @@ local function getTriggerParts()
   return find(TRIGGER_LOCATION, isTriggerPart)
 end
 
---[[
-  We gather all of the triggers at the start of the game, and then we keep track
-  of which ones can currently be used by monitoring the descendants.
+local function init()
+  local triggerParts = getTriggerParts()
 
-  To do this, when a trigger is added or removed from the workspace, we update
-  the list of triggers. We also alert all the clients about the change, this
-  keeps them all on the same page in terms of what triggers can be used.
---]]
-
-local triggerParts = getTriggerParts()
-
-TRIGGER_LOCATION.DescendantAdded:connect(function(inst)
-  if isTriggerPart(inst) and not isInList(triggers, inst) then
-    triggerPartAdded:FireAllClients(inst)
-    table.insert(triggerParts, inst)
+  function remotelyGetTriggers.OnServerInvoke()
+    return triggerParts
   end
-end)
-
-TRIGGER_LOCATION.DescendantRemoving:connect(function(inst)
-  if isTriggerPart(inst) then
-    local index = getIndexInList(triggers, inst)
-    if index then
-      table.remove(triggerParts, index)
-    end
-  end
-end)
-
-function remotelyGetTriggers.OnServerInvoke()
-  return triggerParts
 end
+
+init()
