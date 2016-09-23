@@ -23,7 +23,7 @@
     The name you set when instatiating. You can change this at any time, though
     if you already bound the action it won't update until you rebind it.
 
-  UseMobileButton=true
+  UseMobileButton=false
     This lets you choose whether or not to create a button on mobile devices so
     they can use the action.
 
@@ -69,7 +69,7 @@ function Action.new(name, inputs)
   setmetatable(self, Action)
 
   self.Name = name
-  self.UseMobileButton = true
+  self.UseMobileButton = false
   self.BoundFunction = nil
 
   -- `inputs` can be a table or a single value. If it's the former, we want to

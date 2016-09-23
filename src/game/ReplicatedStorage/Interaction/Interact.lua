@@ -44,6 +44,8 @@ setmetatable(Interact, Action)
 
 function Interact.new()
   local self = Action.new("Interact", INPUTS)
+  self.UseMobileButton = true
+
   return setmetatable(self, Interact)
 end
 
