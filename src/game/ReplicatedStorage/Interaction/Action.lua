@@ -4,7 +4,7 @@
 
   Quick and easy interface to ContextActionService.
 
-  This is just a wrapped around CAS's that comes with the added benefit of being
+  This is just a wrapped around CAS that comes with the added benefit of being
   able to bind and unbind an action without needing to retype the action's name.
 
   Constructors
