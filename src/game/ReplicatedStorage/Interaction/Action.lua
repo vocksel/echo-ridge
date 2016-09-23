@@ -10,9 +10,9 @@
   Constructors
   ============
 
-  Action.new(string name, Enum/table inputs)
+  Action.new(string name, table inputs)
     `name` is the action's name (first argument to CAS:BindAction()), and
-    `inputs` is any of the input types CAS accepts.
+    `inputs` is a list of any of the input types CAS accepts.
 
     You can either pass in a single input or an array of inputs.
 
@@ -71,15 +71,6 @@ function Action.new(name, inputs)
   self.Name = name
   self.UseMobileButton = false
   self.BoundFunction = nil
-
-  -- `inputs` can be a table or a single value. If it's the former, we want to
-  -- make sure it's inside of a table as we unpack() it later when passig it off
-  -- to ContextActionService.
-  if type(inputs) ~= "table" then
-    self.Inputs = { inputs }
-  else
-    self.Inputs = inputs
-  end
 
   return self
 end
