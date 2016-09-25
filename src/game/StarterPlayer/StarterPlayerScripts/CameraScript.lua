@@ -1,5 +1,6 @@
 -- ClassName: LocalScript
 
+local players = game:GetService("Players")
 local run = game:GetService("RunService")
 
 local function getTopDownOffset(dist)
@@ -9,7 +10,7 @@ end
 local OFFSET = getTopDownOffset(45)
 local FIELD_OF_VIEW = 25
 
-local player = game.Players.LocalPlayer
+local player = players.LocalPlayer
 local camera = workspace.CurrentCamera
 
 camera.FieldOfView = FIELD_OF_VIEW
