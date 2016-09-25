@@ -24,9 +24,9 @@ local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
 
 local getTriggers = remotes.getFunction("GetTriggerParts")
 
-local player = players.LocalPlayer
-local playerGui = player.PlayerGui
-local character = player.Character or player.CharacterAdded:wait()
+local client = players.LocalPlayer
+local playerGui = client.PlayerGui
+local character = client.Character or client.CharacterAdded:wait()
 
 local function setupTrigger(triggerPart)
   local trigger = CharacterTrigger.new(triggerPart, character)

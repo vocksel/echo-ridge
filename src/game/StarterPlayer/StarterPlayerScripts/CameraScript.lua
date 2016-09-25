@@ -10,7 +10,7 @@ end
 local OFFSET = getTopDownOffset(45)
 local FIELD_OF_VIEW = 25
 
-local player = players.LocalPlayer
+local client = players.LocalPlayer
 local camera = workspace.CurrentCamera
 
 camera.FieldOfView = FIELD_OF_VIEW
@@ -21,7 +21,7 @@ local function lookAt(pos)
 end
 
 local function onRenderStep()
-  local character = player.Character
+  local character = client.Character
   local rootPart = character:FindFirstChild("HumanoidRootPart")
 
   if character and rootPart then
