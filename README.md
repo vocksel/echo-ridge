@@ -12,4 +12,16 @@ There's a lot of internal stuff going on that the user doesn't see (that you cou
 
 There's still more to do before completion (maybe even some game mechanics), but we're getting there. I hope you'll join me for the ride :)
 
+## Contributing
+
+Interested in helping out? That's great! Here's everything you'll need:
+
+- [Elixir](https://github.com/VoxelDavid/elixir) (and Python 3+) installed on your machine.
+- The [RepoImport](https://www.roblox.com/library/355764648/Repo-Import) plugin. (You can learn more about it [here](https://github.com/VoxelDavid/roblox-repo-import#readme).)
+- The [development map](maps/development-map.rbxl).
+
+Elixir is the build system we use to compile the source code into a ROBLOX model that we can drag and drop into Studio, then RepoImport takes the model and distributes it to all the in-game services.
+
+The level geometry is closed source, so you can only modify the code. The development map is used to supplement this by having instances that the source code points to, without including the actual models.
+
 [game-link]: http://www.roblox.com/games/13525723/view?rbxp=1343930
