@@ -69,6 +69,7 @@ function Action.new(name, inputs)
   setmetatable(self, Action)
 
   self.Name = name
+  self.Inputs = inputs
   self.UseMobileButton = false
   self.BoundFunction = nil
 
