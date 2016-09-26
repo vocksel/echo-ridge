@@ -19,6 +19,7 @@ Interested in helping out? That's great! Here's everything you'll need:
 - [Elixir](https://github.com/VoxelDavid/elixir) (and Python 3+) installed on your machine.
 - The [RepoImport](https://www.roblox.com/library/355764648/Repo-Import) plugin. (You can learn more about it [here](https://github.com/VoxelDavid/roblox-repo-import#readme).)
 - The [development map](maps/development-map.rbxl).
+- The [style guide](https://github.com/VoxelDavid/roblox-style-guide) for this project.
 
 Elixir is the build system we use to compile the source code into a ROBLOX model that we can drag and drop into Studio, then RepoImport takes the model and distributes it to all the in-game services.
 
