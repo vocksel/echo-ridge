@@ -19,6 +19,13 @@
     Returns a new CharacterTrigger with `triggerPart` as the Part it uses to
     determine the area of the trigger, and `character` as what it monitors for.
 
+  Properties
+  ==========
+
+  self.Region
+    A Region3 created from triggerPart. This is used to detect when an object
+    leaves triggerPart.
+
   Methods
   =======
 
@@ -52,6 +59,7 @@ local run = game:GetService("RunService")
 local remotes = require(replicatedStorage.Events.Remotes)
 local Signal = require(replicatedStorage.Events.Signal)
 local BaseTrigger = require(script.Parent.BaseTrigger)
+local Region = require(replicatedStorage.Region)
 
 -- Gets the Characters's HumanoidRootPart.
 --
@@ -77,6 +85,7 @@ function CharacterTrigger.new(triggerPart, character)
   self.TriggerData = require(triggerData)
   self.FiredEvent = remotes.getEvent(self.TriggerData.FiredEvent)
   self.WatchedCharacter = character
+  self.Region = Region.fromPart(triggerPart)
 
   self.CharacterEntered = Signal.new()
   self.CharacterLeft = Signal.new()

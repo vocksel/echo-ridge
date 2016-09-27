@@ -68,10 +68,6 @@
     This is used later so we can connect to its Touched event and monitor the
     area it emcompasses for objects.
 
-  self.Region
-    A Region3 created from triggerPart. This is used to detect when an object
-    leaves triggerPart.
-
   Methods
   =======
 
@@ -102,10 +98,6 @@
   overidden in subclasses.
 --]]
 
-local replicatedStorage = game:GetService("ReplicatedStorage")
-
-local Region = require(replicatedStorage.Region)
-
 local BaseTrigger = {}
 BaseTrigger.__index = BaseTrigger
 
@@ -116,7 +108,6 @@ function BaseTrigger.new(triggerPart)
   setmetatable(self, BaseTrigger)
 
   self.TriggerPart = triggerPart
-  self.Region = Region.fromPart(triggerPart)
 
   return self
 end
