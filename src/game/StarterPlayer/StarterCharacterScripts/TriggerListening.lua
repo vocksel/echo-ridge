@@ -44,13 +44,14 @@ local function setupTrigger(triggerPart)
   local trigger = CharacterTrigger.new(triggerPart, character)
   trigger:Connect()
 
-  interact:SetBoundFunction(function(inputState)
+  local function action(inputState)
     if inputState == Enum.UserInputState.End then return end
     trigger:FireEvent()
-  end)
+  end
 
   trigger.CharacterEntered:connect(function()
     prompt:Show()
+    interact:SetBoundFunction(action)
     interact:Bind()
   end)
 
