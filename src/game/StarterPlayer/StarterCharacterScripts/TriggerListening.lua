@@ -28,20 +28,20 @@ local client = players.LocalPlayer
 local playerGui = client.PlayerGui
 local character = client.Character or client.CharacterAdded:wait()
 
+local interact = Interact.new()
+
+-- This is a little messy but right now InteractionPrompt only works off of a
+-- keyboard key. Since Interact uses the keyboard as its first input type for
+-- ContextActionService, we index the list of inputs and get the name for the
+-- input.
+--
+-- Enums have a `Name` property which in this case is "E" for Enum.KeyCode.E,
+-- so we pass that in to the InteractionPrompt so it displays the correct key.
+local inputName = interact.Inputs[1].Name
+local prompt = InteractionPrompt.new(playerGui, inputName)
+
 local function setupTrigger(triggerPart)
   local trigger = CharacterTrigger.new(triggerPart, character)
-  local interact = Interact.new()
-
-  -- This is a little messy but right now InteractionPrompt only works off of a
-  -- keyboard key. Since Interact uses the keyboard as its first input type for
-  -- ContextActionService, we index the list of inputs and get the name for the
-  -- input.
-  --
-  -- Enums have a `Name` property which in this case is "E" for Enum.KeyCode.E,
-  -- so we pass that in to the InteractionPrompt so it displays the correct key.
-  local inputName = interact.Inputs[1].Name
-  local prompt = InteractionPrompt.new(playerGui, inputName)
-
   trigger:Connect()
 
   interact:SetBoundFunction(function(inputState)
