@@ -1,6 +1,6 @@
 --[[
-  BaseTrigger
-  ===========
+  Trigger
+  =======
 
   This is the base Trigger class. It doesn't do much on it's own, but it acts
   primarily as a foundation for other classes to extend off of.
@@ -20,8 +20,8 @@
   Constructors
   ============
 
-  BaseTrigger.new(Part triggerPart)
-    Constructs a new BaseTrigger using triggerPart as the area it manages.
+  Trigger.new(Part triggerPart)
+    Constructs a new Trigger using triggerPart as the area it manages.
 
   Properties
   ==========
@@ -42,7 +42,7 @@
   =====
 
     local triggerPart = workspace.TriggerPart
-    local trigger = BaseTrigger.new(triggerPart)
+    local trigger = Trigger.new(triggerPart)
 
     trigger.Touched:connect(function()
       print("Touched")
@@ -76,16 +76,16 @@
   pay for guaranteed detection.
 --]]
 
-local BaseTrigger = {}
-BaseTrigger.__index = BaseTrigger
+local Trigger = {}
+Trigger.__index = Trigger
 
-function BaseTrigger.new(triggerPart)
+function Trigger.new(triggerPart)
   assert(triggerPart.ClassName and triggerPart:IsA("BasePart"),
     string.format("bad argument #1 to 'new' (Part expected, got %s)",
     triggerPart.ClassName or type(triggerPart)))
 
   local self = {}
-  setmetatable(self, BaseTrigger)
+  setmetatable(self, Trigger)
 
   self.TriggerPart = triggerPart
   self.Touched = triggerPart.Touched
@@ -93,4 +93,4 @@ function BaseTrigger.new(triggerPart)
   return self
 end
 
-return BaseTrigger
+return Trigger

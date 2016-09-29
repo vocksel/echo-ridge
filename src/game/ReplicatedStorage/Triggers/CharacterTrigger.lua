@@ -58,7 +58,7 @@ local run = game:GetService("RunService")
 
 local remotes = require(replicatedStorage.Events.Remotes)
 local Signal = require(replicatedStorage.Events.Signal)
-local BaseTrigger = require(script.Parent.BaseTrigger)
+local Trigger = require(script.Parent.Trigger)
 local Region = require(replicatedStorage.Region)
 
 -- Gets the Characters's HumanoidRootPart.
@@ -73,14 +73,14 @@ end
 
 local CharacterTrigger = {}
 CharacterTrigger.__index = CharacterTrigger
-setmetatable(CharacterTrigger, BaseTrigger)
+setmetatable(CharacterTrigger, Trigger)
 
 function CharacterTrigger.new(triggerPart, character)
   local triggerData = triggerPart:FindFirstChild("TriggerData")
   assert(triggerData, "argument #1 must have a ModuleScript named "..
     "\"TriggerData\" as a child.")
 
-  local self = BaseTrigger.new(triggerPart)
+  local self = Trigger.new(triggerPart)
 
   self.TriggerData = require(triggerData)
   self.FiredEvent = remotes.getEvent(self.TriggerData.FiredEvent)
