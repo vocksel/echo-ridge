@@ -2,25 +2,20 @@
   BaseTrigger
   ===========
 
-  Abstract base class for Triggers.
-
-  As this is an abstract class, it should only be used for extending. This class
-  is not intended to be instantiated on its own
+  This is the base Trigger class. It doesn't do much on it's own, but it acts
+  primarily as a foundation for other classes to extend off of.
 
   A "trigger" conceptually (not a Trigger class) is an area in the game world
-  that we monitor for events. For example, games like The Legend of Zelda use
-  triggers to know when the player has reached a certain point, then running a
-  cutscene or similar event.
+  that we monitor for events. For example, games in The Legend of Zelda series
+  use triggers to know when the player has reached a certain point in the game,
+  and can then play a cutscene, close a door, or perform a similar event.
 
-  A trigger is almost exactly like a Region3, only its based off of a Part so we
-  can detect when its touched. In fact, we even implement Region3s to check when
-  objects leave the trigger. This comes with the downside of not being able to
-  rotate the Trigger's Part, as Region3s don't support it currently, but it's a
-  small price to pay for built-in area detection.
+  A Trigger *class* takes a Part and applies this concept to it, turning the
+  Part into an area we can monitor.
 
-  Using Parts and Region3s in this way makes for very efficient event-based
-  area detection, as loops will only run once something comes in contact with
-  the Trigger's Part.
+  This class simply makes use of the Part's Touched event, but sub-classes
+  extend this functionality to make highly specialized cases for when something
+  has been triggered.
 
   More Info
   =========
@@ -55,47 +50,30 @@
   BaseTrigger.new(Part triggerPart)
     Constructs a new BaseTrigger using triggerPart as the area it manages.
 
-    You typically won't use this function except for inheritence in subclasses.
-    BaseTrigger has very minimal functionality, it's not intended to be used by
-    itself.
-
   Properties
   ==========
 
   self.TriggerPart
-    A reference to triggerPart that you pass in when instantiating.
+    A reference to triggerPart.
 
     This is used later so we can connect to its Touched event and monitor the
     area it emcompasses for objects.
 
-  Methods
-  =======
+  self.Touched
+    A reference to triggerPart's Touched event.
 
-  self:TouchListner(Part otherPart)
-    This is automatically called whenever triggerPart is touched.
-
-    By default, this will throw an error. You are expected to extend this class
-    and override this method to define what should happen when triggerPart is
-    touched.
-
-  Connect()
-    After instatiating you should call this immediately.
-
-    This kicks everything off by listening for when triggerPart is touched.
-
-    It connect's triggerPart's Touched event to TouchListner, which subclasses
-    use to define what happens when something comes in contact with the Trigger.
+    You should use this for all Touched-based interaction with the Trigger, as
+    opposed to referencing triggerPart.Touched directly.
 
   Usage
   =====
 
     local triggerPart = workspace.TriggerPart
     local trigger = BaseTrigger.new(triggerPart)
-    trigger:Connect()
 
-  Because this class isn't supposed to be used on its own, any time triggerPart
-  is touched you'll get an error because the default TouchListner() needs to be
-  overidden in subclasses.
+    trigger.Touched:connect(function()
+      print("Touched")
+    end)
 --]]
 
 local BaseTrigger = {}
@@ -108,18 +86,9 @@ function BaseTrigger.new(triggerPart)
   setmetatable(self, BaseTrigger)
 
   self.TriggerPart = triggerPart
+  self.Touched = triggerPart.Touched
 
   return self
-end
-
-function BaseTrigger:TouchListner()
-  error("You must override BaseTrigger's TouchListner method in subclasses.")
-end
-
-function BaseTrigger:Connect()
-  self.TriggerPart.Touched:connect(function(otherPart)
-    self:TouchListener(otherPart)
-  end)
 end
 
 return BaseTrigger

@@ -42,7 +42,7 @@ local prompt = InteractionPrompt.new(playerGui, inputName)
 
 local function setupTrigger(triggerPart)
   local trigger = CharacterTrigger.new(triggerPart, character)
-  trigger:Connect()
+  trigger:TouchListener()
 
   local function action(inputState)
     if inputState == Enum.UserInputState.End then return end

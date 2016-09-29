@@ -104,11 +104,13 @@ function CharacterTrigger:DetectCharacterInTrigger()
 end
 
 function CharacterTrigger:TouchListener(otherPart)
-  local rootPart = getRootPart(self.WatchedCharacter)
-  if otherPart == rootPart then
-    self.CharacterEntered:fire()
-    self:DetectCharacterInTrigger()
-  end
+  self.Touched:connect(function(otherPart)
+    local rootPart = getRootPart(self.WatchedCharacter)
+    if otherPart == rootPart then
+      self.CharacterEntered:fire()
+      self:DetectCharacterInTrigger()
+    end
+  end)
 end
 
 function CharacterTrigger:FireEvent()
