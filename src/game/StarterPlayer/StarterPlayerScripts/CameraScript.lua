@@ -25,6 +25,15 @@ local function onRenderStep()
   local rootPart = character:FindFirstChild("HumanoidRootPart")
 
   if character and rootPart then
+    -- The ROBLOX Wiki describes this as an important property to update, as
+    -- "certain visuals will be more detailed and will update more frequently".
+    --
+    -- What this means is unclear, or if it even has any effect, but we're
+    -- including this property just in case it makes a difference.
+    --
+    -- Source: http://wiki.roblox.com/index.php?title=API:Class/Camera/Focus
+    camera.Focus = rootPart.CFrame
+
     lookAt(rootPart.Position)
   end
 end
