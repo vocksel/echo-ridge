@@ -1,29 +1,35 @@
 --[[
+  Region
+  ======
+
   This is a simple wrapper for the Region3 class.
 
   The main benefits are the ability to run region operations from the instance
   itself, instead of having to go through the Workspace. It also lets you
   consturct a Region3 from a Part.
 
-  Constructors:
+  Constructors
+  ------------
 
-    Region.new(Vector3 bottomPos, Vector3 topPos)
-      Same as Region3.new. Constructs a new Region out of two Vector3s.
+  Region.new(Vector3 bottomPos, Vector3 topPos)
+    Same as Region3.new. Constructs a new Region out of two Vector3s.
 
-    Region.fromPart(Part part)
-      Constructs a Region out of a Part's bounding box.
+  Region.fromPart(Part part)
+    Constructs a Region out of a Part's bounding box.
 
-  Properties:
+  Properties
+  ----------
 
-    The properties are the exact same as the Region3 class. Infact, they're just
-    pointers to the internally constructed Region3.
+  The properties are the exact same as the Region3 class. Infact, they're just
+  pointers to the internally constructed Region3.
 
-    self.CFrame
-      Position of the Region.
-    self.Size
-      Size of the Region.
+  self.CFrame
+    Position of the Region.
+  self.Size
+    Size of the Region.
 
-  Methods:
+  Methods
+  -------
 
   PartIsInRegion(Part part)
     Checks if `part` is within the Region.
@@ -31,7 +37,8 @@
   CharacterIsInRegion(Model character)
     Check if a player's Character model is within the Region.
 
-  Usage:
+  Usage
+  -----
 
     local region = Region.new(Vector3.new(1, 1, 1), Vector3.new(9, 9, 9))
 
