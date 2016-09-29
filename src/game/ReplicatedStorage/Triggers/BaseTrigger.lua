@@ -17,33 +17,6 @@
   extend this functionality to make highly specialized cases for when something
   has been triggered.
 
-  More Info
-  =========
-
-  A Part was decided on as the representation for Triggers mainly because of its
-  Touched event, but also because it makes it very simple to define the area a
-  Trigger manages by moving and resizing the Part.
-
-  In development, you can unhide all of the Trigger Parts and know exactly where
-  each Trigger is and the space it takes up, and when prepraring for production
-  you can hide them again.
-
-  History
-  =======
-
-  In earlier versions, we used the TouchEnded event to check when an object left
-  the Trigger Part, but this didn't satisfy our needs in the end. When an object
-  is teleported outside of a Part, the TouchEnded event will not fire.
-
-  Subclasses are used to teleport the Player to different locations in the game,
-  because TouchEnded never fired, this left client-side actions bound even while
-  outside of the trigger, allowing the player to (for instance) teleport onto
-  the Sky Wave from anywhere in the game.
-
-  Because of this, we had to scrap the TouchEnded functionality in favor of
-  Region3s. This means we can't rotate the Triggers, but it's a small price to
-  pay for guaranteed detection.
-
   Constructors
   ============
 
@@ -74,6 +47,33 @@
     trigger.Touched:connect(function()
       print("Touched")
     end)
+
+  More Info
+  =========
+
+  A Part was decided on as the representation for Triggers mainly because of its
+  Touched event, but also because it makes it very simple to define the area a
+  Trigger manages by moving and resizing the Part.
+
+  In development, you can unhide all of the Trigger Parts and know exactly where
+  each Trigger is and the space it takes up, and when prepraring for production
+  you can hide them again.
+
+  History
+  =======
+
+  In earlier versions, we used the TouchEnded event to check when an object left
+  the Trigger Part, but this didn't satisfy our needs in the end. When an object
+  is teleported outside of a Part, the TouchEnded event will not fire.
+
+  Subclasses are used to teleport the Player to different locations in the game,
+  because TouchEnded never fired, this left client-side actions bound even while
+  outside of the trigger, allowing the player to (for instance) teleport onto
+  the Sky Wave from anywhere in the game.
+
+  Because of this, we had to scrap the TouchEnded functionality in favor of
+  Region3s. This means we can't rotate the Triggers, but it's a small price to
+  pay for guaranteed detection.
 --]]
 
 local BaseTrigger = {}
