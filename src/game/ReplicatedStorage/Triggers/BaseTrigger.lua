@@ -80,7 +80,9 @@ local BaseTrigger = {}
 BaseTrigger.__index = BaseTrigger
 
 function BaseTrigger.new(triggerPart)
-  assert(triggerPart, "argument #1 must be a Part")
+  assert(triggerPart.ClassName and triggerPart:IsA("BasePart"),
+    string.format("bad argument #1 to 'new' (Part expected, got %s)",
+    triggerPart.ClassName or type(triggerPart)))
 
   local self = {}
   setmetatable(self, BaseTrigger)
