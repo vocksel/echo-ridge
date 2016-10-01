@@ -1,0 +1,71 @@
+--[[
+  Expect
+  ======
+
+  Contains functions for use with assert() calls.
+
+  These are used to take the class checking out of assertion calls so you don't
+  need to write tons of conditions.
+
+  Usage
+  -----
+
+  local function onlyAcceptParts(obj)
+    assert(expect.class(obj, "BasePart"), string.format("bad argument #1 to "..
+      "onlyAcceptParts (BasePart expected, got %s)", expect.getType(obj)))
+
+    doSomethingWithThePart(obj)
+  end
+
+  API
+  ---
+
+  expect.getType(Instance obj)
+    Returns the class name of `obj`.
+
+    This is used with the assertion message to output the type of the object
+    you're working with.
+
+    This function accounts for both ROBLOX and Lua classes, so you don't need to
+    worry about any special type checking.
+
+  expect.class(Instance obj, string className)
+    Checks if `obj` is a `className` instance.
+
+    This first checks if obj is one of ROBLOX's classes, and if that fails
+    checks if it's one of the built-in Lua classes.
+
+  expect.classes(Instance obj, string ...)
+    Allows you to check if `obj` is any number of classes.
+
+  expect.basePart(Instance obj)
+    A quick function to easily check if `obj` is a BasePart.
+--]]
+
+local expect = {}
+
+function expect.getType(obj)
+  return obj.ClassName or type(obj)
+end
+
+function expect.class(obj, className)
+  local isRobloxClass = obj.ClassName and obj:IsA(className)
+  local isLuaClass = type(obj) == className
+
+  return isRobloxClass or isLuaClass
+end
+
+function expect.classes(obj, ...)
+  for _, class in ipairs{...} do
+    if not expect.class(class) then
+      return false
+    end
+  end
+  return true
+end
+
+function expect.basePart(obj)
+  return expect.class(obj, "BasePart")
+end
+
+return expect

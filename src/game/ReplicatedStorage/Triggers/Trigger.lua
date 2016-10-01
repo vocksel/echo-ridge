@@ -76,13 +76,16 @@
   pay for guaranteed detection.
 --]]
 
+local replicatedStorage = game:GetService("ReplicatedStorage")
+
+local expect = require(replicatedStorage.Util.Expect)
+
 local Trigger = {}
 Trigger.__index = Trigger
 
 function Trigger.new(triggerPart)
-  assert(triggerPart.ClassName and triggerPart:IsA("BasePart"),
-    string.format("bad argument #1 to 'new' (Part expected, got %s)",
-    triggerPart.ClassName or type(triggerPart)))
+  assert(expect.basePart(triggerPart), string.format("bad argument #1 to "..
+    "'new' (Part expected, got %s)", expect.getType(triggerPart)))
 
   local self = {}
   setmetatable(self, Trigger)
