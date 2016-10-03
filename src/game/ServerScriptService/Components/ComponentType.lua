@@ -60,9 +60,6 @@
     If any instance has a BoolValue named "Disabled" set to true, the instance
     will be ignored. This is used in development so we can add Components
     without them being picked up until we hook them up properly.
-
-  GetComponents()
-    This is used server-side for when we need to get the list of components.
 --]]
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -103,10 +100,6 @@ function ComponentType:FindComponents()
   self.FoundComponents = find(self.Location, function(obj)
     return not isDisabled(obj) and self.Callback(obj)
   end)
-end
-
-function ComponentType:GetComponents()
-  return self.FoundComponents
 end
 
 return ComponentType
