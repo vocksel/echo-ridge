@@ -57,6 +57,10 @@
   FindComponents()
     Locates all of the Components.
 
+    If any instance has a BoolValue named "Disabled" set to true, the instance
+    will be ignored. This is used in development so we can add Components
+    without them being picked up until we hook them up properly.
+
   GetComponents()
     This is used server-side for when we need to get the list of components.
 --]]
@@ -65,6 +69,15 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local remotes = require(replicatedStorage.Events.Remotes)
 local find = require(replicatedStorage.Util.Find)
+
+-- This is used when finding Components. It allows us to skip instances that
+-- have a Disabled BoolValue set to true.
+local function isDisabled(obj)
+  local disabled = obj:FindFirstChild("Disabled")
+  if disabled and disabled:IsA("BoolValue") then
+    return disabled.Value
+  end
+end
 
 local ComponentType = {}
 ComponentType.__index = ComponentType
@@ -87,7 +100,9 @@ function ComponentType.new(remoteName, callback)
 end
 
 function ComponentType:FindComponents()
-  self.FoundComponents = find(self.Location, self.Callback)
+  self.FoundComponents = find(self.Location, function(obj)
+    return not isDisabled(obj) and self.Callback(obj)
+  end)
 end
 
 function ComponentType:GetComponents()
