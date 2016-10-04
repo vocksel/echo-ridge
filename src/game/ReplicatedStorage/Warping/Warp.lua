@@ -67,6 +67,7 @@ function Warp.new(pad)
 end
 
 function Warp:TeleportToPad(model)
+  assert(model, "Could not teleport (Model expected, got nil)")
   teleportOnTop(model, self.Pad)
 end
 
