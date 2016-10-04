@@ -76,14 +76,8 @@ CharacterTrigger.__index = CharacterTrigger
 setmetatable(CharacterTrigger, Trigger)
 
 function CharacterTrigger.new(triggerPart, character)
-  local triggerData = triggerPart:FindFirstChild("TriggerData")
-  assert(triggerData, "argument #1 must have a ModuleScript named "..
-    "\"TriggerData\" as a child.")
-
   local self = Trigger.new(triggerPart)
 
-  self.TriggerData = require(triggerData)
-  self.FiredEvent = remotes.getEvent(self.TriggerData.FiredEvent)
   self.WatchedCharacter = character
   self.Region = Region.fromPart(triggerPart)
 
@@ -111,10 +105,6 @@ function CharacterTrigger:TouchListener(otherPart)
       self:DetectCharacterInTrigger()
     end
   end)
-end
-
-function CharacterTrigger:FireEvent()
-  self.FiredEvent:FireServer()
 end
 
 return CharacterTrigger
