@@ -17,28 +17,32 @@ local Trigger = require(replicatedStorage.Triggers.Trigger)
 
 local character = players.LocalPlayer.Character
 local rootPart = character:FindFirstChild("HumanoidRootPart")
-local getWarpModels = remotes.getFunction("GetWarpModels")
+local getComponents = remotes.getFunction("GetComponents")
 
-local function setupTrigger(warp, triggerPart)
-  local trigger = Trigger.new(triggerPart)
+local function setupTriggerWarps()
+  local function setupTrigger(warp, triggerPart)
+    local trigger = Trigger.new(triggerPart)
 
-  trigger.Touched:connect(function(otherPart)
-    if otherPart == rootPart then
-      warp:TeleportToPad(character)
-    end
-  end)
+    trigger.Touched:connect(function(otherPart)
+      if otherPart == rootPart then
+        warp:TeleportToPad(character)
+      end
+    end)
+  end
+
+  local function setupWarp(warpModel)
+    local linkedWarp = warpModel.LinkedWarp.Value
+    local triggerPart = warpModel.Trigger
+    local warp = Warp.new(linkedWarp.Pad)
+
+    setupTrigger(warp, triggerPart)
+  end
+
+  local triggerWarps = getComponents:InvokeServer("TriggerWarp")
+
+  for _, warpModel in ipairs(triggerWarps) do
+    setupWarp(warpModel)
+  end
 end
 
-local function setupWarp(warpModel)
-  local linkedWarp = warpModel.LinkedWarp.Value
-  local triggerPart = warpModel.Trigger
-  local warp = Warp.new(linkedWarp.Pad)
-
-  setupTrigger(warp, triggerPart)
-end
-
-local warpModels = getWarpModels:InvokeServer()
-
-for _, warpModel in ipairs(warpModels) do
-  setupWarp(warpModel)
-end
+setupTriggerWarps()

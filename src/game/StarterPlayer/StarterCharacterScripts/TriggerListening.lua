@@ -22,7 +22,7 @@ local Interact = require(replicatedStorage.Interaction.Interact)
 local InteractionPrompt = require(replicatedStorage.UI.InteractionPrompt)
 local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
 
-local getTriggers = remotes.getFunction("GetTriggerParts")
+local getComponents = remotes.getFunction("GetComponents")
 
 local client = players.LocalPlayer
 local playerGui = client.PlayerGui
@@ -62,7 +62,8 @@ local function setupTrigger(triggerPart)
 end
 
 local function setupExistingTriggers()
-  local triggerParts = getTriggers:InvokeServer()
+  local triggerParts = getComponents:InvokeServer("ActionTrigger")
+
   for _, triggerPart in ipairs(triggerParts) do
     setupTrigger(triggerPart)
   end
