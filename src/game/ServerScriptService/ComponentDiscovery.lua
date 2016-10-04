@@ -1,6 +1,6 @@
 --[[
-  ComponentHandling
-  =================
+  ComponentDiscovery
+  ==================
 
   Handles the discovery of "Components".
 
