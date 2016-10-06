@@ -13,7 +13,7 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local remotes = require(replicatedStorage.Events.Remotes)
 local Warp = require(replicatedStorage.Warping.Warp)
-local Trigger = require(replicatedStorage.Triggers.Trigger)
+local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
 
 local client = players.LocalPlayer
 local playerGui = client.PlayerGui
@@ -24,12 +24,11 @@ local getComponents = remotes.getFunction("GetComponents")
 
 local function setupTriggerWarps()
   local function setupTrigger(warp, triggerPart)
-    local trigger = Trigger.new(triggerPart)
+    local trigger = CharacterTrigger.new(triggerPart, character)
+    trigger:TouchListener()
 
-    trigger.Touched:connect(function(otherPart)
-      if otherPart == rootPart then
-        warp:TeleportToPad(character)
-      end
+    trigger.Touched:connect(function()
+      warp:TeleportToPad(character)
     end)
   end
 
@@ -51,7 +50,6 @@ end
 local function setupActionWarps()
   local Interact = require(replicatedStorage.Interaction.Interact)
   local InteractionPrompt = require(replicatedStorage.UI.InteractionPrompt)
-  local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
 
   local interact = Interact.new()
 
@@ -74,13 +72,13 @@ local function setupActionWarps()
       warp:TeleportToPad(character)
     end
 
-    trigger.CharacterEntered:connect(function()
+    trigger.Touched:connect(function()
       prompt:Show()
       interact:SetBoundFunction(action)
       interact:Bind()
     end)
 
-    trigger.CharacterLeft:connect(function()
+    trigger.TouchEnded:connect(function()
       prompt:QuickHide()
       interact:Unbind()
     end)

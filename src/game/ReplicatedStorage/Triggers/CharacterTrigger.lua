@@ -2,109 +2,38 @@
   CharacterTrigger
   ================
 
-  Trigger for Character detection.
+  Trigger for Character detection. Inherits RegionTrigger.
 
   This is typically used by the client so that they can detect when their
   Character is inside one of the Trigger Parts. They then bind actions while
   they're inside the trigger so they can interact with the world.
 
-  Each Trigger Part used with this class needs a `TriggerData` module with a
-  `FiredEvent` property, which is the name of the RemoteEvent to fire when the
-  user interacts while inside of the Trigger Part.
-
   Connstructors
-  =============
+  -------------
 
   CharacterTrigger.new(Part triggerPart, Model character)
-    Returns a new CharacterTrigger with `triggerPart` as the Part it uses to
-    determine the area of the trigger, and `character` as what it monitors for.
+    Creates a new CharacterTrigger.
 
-  Properties
-  ==========
+    `triggerPart` is the Part it used to determine the area of the trigger.
 
-  self.Region
-    A Region3 created from triggerPart. This is used to detect when an object
-    leaves triggerPart.
-
-  Methods
-  =======
-
-  DetectCharacterInTrigger()
-    Runs a loop to make sure `character` is still inside the region. If not,
-    fires ClientLeft.
-
-  TouchListner(Part otherPart)
-    Listens for `character` coming in contact with the Trigger. Fires
-    ClientEntered.
-
-  FireEvent()
-    Fires the event the Trigger manages to the server.
-
-  Events
-  ======
-
-  CharacterEntered
-    Fired when `character` first comes in contact with the Trigger Part.
-
-  CharacterLeft
-    Fire when `character` leaves the Trigger's region.
-
-    The detection for this starts right away, so the character can't touch and
-    then walk away from the Trigger without this firing.
+    `character` is the Character, and is the only one that's allowed to interact
+    with the TriggerPart.
 --]]
 
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local run = game:GetService("RunService")
-
-local remotes = require(replicatedStorage.Events.Remotes)
-local Signal = require(replicatedStorage.Events.Signal)
-local Trigger = require(script.Parent.Trigger)
-local Region = require(replicatedStorage.Region)
-
--- Gets the Characters's HumanoidRootPart.
---
--- This is used so we can check if the Character the Trigger manages is the same
--- one that just came in contact with the Trigger Part.
-local function getRootPart(character)
-  return character:FindFirstChild("HumanoidRootPart")
-end
-
---------------------------------------------------------------------------------
+local RegionTrigger = require(script.Parent.RegionTrigger)
 
 local CharacterTrigger = {}
 CharacterTrigger.__index = CharacterTrigger
-setmetatable(CharacterTrigger, Trigger)
+setmetatable(CharacterTrigger, RegionTrigger)
 
 function CharacterTrigger.new(triggerPart, character)
-  local self = Trigger.new(triggerPart)
+  local self = RegionTrigger.new(triggerPart)
+  setmetatable(self, CharacterTrigger)
 
-  self.WatchedCharacter = character
-  self.Region = Region.fromPart(triggerPart)
+  local rootPart = character:FindFirstChild("HumanoidRootPart")
+  self.Whitelist:Add(rootPart)
 
-  self.CharacterEntered = Signal.new()
-  self.CharacterLeft = Signal.new()
-
-  return setmetatable(self, CharacterTrigger)
-end
-
-function CharacterTrigger:DetectCharacterInTrigger()
-  local conn
-  conn = run.Heartbeat:connect(function()
-    if not self.Region:CharacterIsInRegion(self.WatchedCharacter) then
-      self.CharacterLeft:fire()
-      conn:disconnect()
-    end
-  end)
-end
-
-function CharacterTrigger:TouchListener(otherPart)
-  self.Touched:connect(function(otherPart)
-    local rootPart = getRootPart(self.WatchedCharacter)
-    if otherPart == rootPart then
-      self.CharacterEntered:fire()
-      self:DetectCharacterInTrigger()
-    end
-  end)
+  return self
 end
 
 return CharacterTrigger

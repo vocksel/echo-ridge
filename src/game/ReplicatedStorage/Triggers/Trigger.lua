@@ -29,20 +29,45 @@
   self.TriggerPart
     A reference to triggerPart.
 
-    This is used later so we can connect to its Touched event and monitor the
-    area it emcompasses for objects.
+    This is used internally so we can connect to its Touched event and monitor
+    the area it emcompasses for objects.
 
-  self.Touched
-    A reference to triggerPart's Touched event.
+  self.Whitelist
+    This is a Array instance which contains all of the Parts that are allowed to
+    interact with the Trigger.
 
-    You should use this for all Touched-based interaction with the Trigger, as
-    opposed to referencing triggerPart.Touched directly.
+    When empty, this is ignored and all Parts are detected.
+
+  Methods
+  =======
+
+  HandleTouch(Part otherPart)
+    Called by TouchListener() when a Part makes it through validation.
+
+  TouchListener()
+    Starts up all the touch listening.
+
+    You have to call this right after creating the Trigger, otherwise there will
+    be no touch detection.
+
+    This method acts as a sort of gatekeeper, only Parts in the whitelist (or if
+    there's no whitelist, any Part) are allowed through to HandleTouch().
+
+  Events
+  ======
+
+  Touched
+    Fired when a whitelisted Part touches the Trigger.
+
+    If the whitelist is empty, any Part will fire this event.
 
   Usage
   =====
 
     local triggerPart = workspace.TriggerPart
     local trigger = Trigger.new(triggerPart)
+
+    trigger:TouchListener()
 
     trigger.Touched:connect(function()
       print("Touched")
@@ -79,6 +104,8 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local expect = require(replicatedStorage.Util.Expect)
+local Array = require(replicatedStorage.Util.Array)
+local Signal = require(replicatedStorage.Events.Signal)
 
 local Trigger = {}
 Trigger.__index = Trigger
@@ -91,9 +118,23 @@ function Trigger.new(triggerPart)
   setmetatable(self, Trigger)
 
   self.TriggerPart = triggerPart
-  self.Touched = triggerPart.Touched
+  self.Whitelist = Array.new()
+
+  self.Touched = Signal.new()
 
   return self
+end
+
+function Trigger:HandleTouch(otherPart)
+  self.Touched:fire(otherPart)
+end
+
+function Trigger:TouchListener()
+  self.TriggerPart.Touched:connect(function(otherPart)
+    if self.Whitelist:IsEmpty() or self.Whitelist:Has(otherPart) then
+      self:HandleTouch(otherPart)
+    end
+  end)
 end
 
 return Trigger
