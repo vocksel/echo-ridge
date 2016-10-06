@@ -95,7 +95,7 @@ function Region:__tostring()
 end
 
 function Region:PartIsInRegion(part)
-	local parts = workspace:FindPartsInRegion3(self._Region)
+	local parts = workspace:FindPartsInRegion3(self._Region, nil, math.huge)
 	for _, partInRegion in ipairs(parts) do
 		if part == partInRegion then
 			return true
