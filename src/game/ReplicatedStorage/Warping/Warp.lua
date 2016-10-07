@@ -31,7 +31,7 @@
 --]]
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local expect = require(replicatedStorage.Util.Expect)
+local expect = require(replicatedStorage.Helpers.Expect)
 
 --[[
   Moves `model` on top of `locationPart`.

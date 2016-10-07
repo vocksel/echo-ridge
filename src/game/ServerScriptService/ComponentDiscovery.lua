@@ -64,7 +64,7 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 local COMPONENT_LOCATION = workspace
 
 local remotes = require(replicatedStorage.Events.Remotes)
-local find = require(replicatedStorage.Util.Find)
+local find = require(replicatedStorage.Helpers.Find)
 
 local remotelyGetComponents = remotes.getFunction("GetComponents")
 

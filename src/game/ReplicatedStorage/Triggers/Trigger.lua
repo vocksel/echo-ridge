@@ -103,8 +103,8 @@
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local expect = require(replicatedStorage.Util.Expect)
-local Array = require(replicatedStorage.Util.Array)
+local expect = require(replicatedStorage.Helpers.Expect)
+local Array = require(replicatedStorage.Helpers.Array)
 local Signal = require(replicatedStorage.Events.Signal)
 
 local Trigger = {}
