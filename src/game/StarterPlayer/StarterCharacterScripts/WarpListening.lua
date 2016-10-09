@@ -14,45 +14,15 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 local remotes = require(replicatedStorage.Events.Remotes)
 local Warp = require(replicatedStorage.Warping.Warp)
 local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
+local Interact = require(replicatedStorage.Interaction.Interact)
+local InteractionPrompt = require(replicatedStorage.UI.InteractionPrompt)
 
 local client = players.LocalPlayer
 local playerGui = client.PlayerGui
 local character = client.Character
-local rootPart = character:FindFirstChild("HumanoidRootPart")
 
-local getComponents = remotes.getFunction("GetComponents")
-
-local function setupTriggerWarps()
-  local function setupTrigger(warp, triggerPart)
-    local trigger = CharacterTrigger.new(triggerPart, character)
-    trigger:TouchListener()
-
-    trigger.Touched:connect(function()
-      warp:TeleportToPad(character)
-    end)
-  end
-
-  local function setupWarp(warpModel)
-    local linkedWarp = warpModel.LinkedWarp.Value
-    local triggerPart = warpModel.Trigger
-    local warp = Warp.new(linkedWarp.Pad)
-
-    setupTrigger(warp, triggerPart)
-  end
-
-  local triggerWarps = getComponents:InvokeServer("TriggerWarp")
-
-  for _, warpModel in ipairs(triggerWarps) do
-    setupWarp(warpModel)
-  end
-end
-
-local function setupActionWarps()
-  local Interact = require(replicatedStorage.Interaction.Interact)
-  local InteractionPrompt = require(replicatedStorage.UI.InteractionPrompt)
-
-  local interact = Interact.new()
-
+local interact = Interact.new()
+local prompt do
   -- This is a little messy but right now InteractionPrompt only works off of a
   -- keyboard key. Since Interact uses the keyboard as its first input type for
   -- ContextActionService, we index the list of inputs and get the name for the
@@ -61,43 +31,76 @@ local function setupActionWarps()
   -- Enums have a `Name` property which in this case is "E" for Enum.KeyCode.E,
   -- so we pass that in to the InteractionPrompt so it displays the correct key.
   local inputName = interact.Inputs[1].Name
-  local prompt = InteractionPrompt.new(playerGui, inputName)
-
-  local function setupTrigger(warp, triggerPart)
-    local trigger = CharacterTrigger.new(triggerPart, character)
-    trigger:TouchListener()
-
-    local function action(inputState)
-      if inputState == Enum.UserInputState.End then return end
-      warp:TeleportToPad(character)
-    end
-
-    trigger.Touched:connect(function()
-      prompt:Show()
-      interact:SetBoundFunction(action)
-      interact:Bind()
-    end)
-
-    trigger.TouchEnded:connect(function()
-      prompt:QuickHide()
-      interact:Unbind()
-    end)
-  end
-
-  local function setupWarp(warpModel)
-    local linkedWarp = warpModel.LinkedWarp.Value
-    local triggerPart = warpModel.Trigger
-    local warp = Warp.new(linkedWarp.Pad)
-
-    setupTrigger(warp, triggerPart)
-  end
-
-  local actionWarps = getComponents:InvokeServer("ActionWarp")
-
-  for _, warpModel in ipairs(actionWarps) do
-    setupWarp(warpModel)
-  end
+  prompt = InteractionPrompt.new(playerGui, inputName)
 end
 
-setupTriggerWarps()
-setupActionWarps()
+local getComponents = remotes.getFunction("GetComponents")
+
+--------------------------------------------------------------------------------
+-- Warp Setup
+--------------------------------------------------------------------------------
+
+local function getTrigger(triggerPart)
+  local trigger = CharacterTrigger.new(triggerPart, character)
+  trigger:TouchListener()
+
+  return trigger
+end
+
+local function getWarp(linkedWarp)
+  local linkedWarp = linkedWarp.Value
+  local warp = Warp.new(linkedWarp.Pad)
+
+  return warp
+end
+
+local function getWarpComponents(warpModel)
+  local linkedWarp = warpModel.LinkedWarp
+  local triggerPart = warpModel.Trigger
+  local warp = getWarp(linkedWarp)
+  local trigger = getTrigger(triggerPart)
+
+  return warp, trigger
+end
+
+local function setupTriggerWarp(warp, trigger)
+  trigger.Touched:connect(function()
+    warp:TeleportToPad(character)
+  end)
+end
+
+local function setupActionWarp(warp, trigger)
+  local function action(inputState)
+    if inputState == Enum.UserInputState.End then return end
+    warp:TeleportToPad(character)
+  end
+
+  trigger.Touched:connect(function()
+    prompt:Show()
+    interact:SetBoundFunction(action)
+    interact:Bind()
+  end)
+
+  trigger.TouchEnded:connect(function()
+    prompt:QuickHide()
+    interact:Unbind()
+  end)
+end
+
+
+--------------------------------------------------------------------------------
+-- Initialization
+--------------------------------------------------------------------------------
+
+local warps = getComponents:InvokeServer("Warp")
+
+for _, warpModel in ipairs(warps) do
+  local warpType = warpModel:FindFirstChild("WarpType")
+  local warp, trigger = getWarpComponents(warpModel)
+
+  if warpType.Value == "Trigger" then
+    setupTriggerWarp(warp, trigger)
+  elseif warpType.Value == "Action" then
+    setupActionWarp(warp, trigger)
+  end
+end
