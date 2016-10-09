@@ -138,19 +138,20 @@ end
 --
 -- Returns a sorted list of all the components so they can be easily accessed
 -- based off their ComponentType.
-local function getComponents(parent)
-  local function callback(object)
+local function getAllComponents(parent)
+  return find(parent, function(object)
     return isComponent(object) and not isDisabled(object)
-  end
+  end)
+end
 
-  local components = find(parent, callback)
-
+local function getGroupedComponents(parent)
+  local components = getAllComponents(parent)
   return groupComponents(components)
 end
 
 --------------------------------------------------------------------------------
 
-local componentLists = getComponents(COMPONENT_LOCATION)
+local componentLists = getGroupedComponents(COMPONENT_LOCATION)
 
 function remotelyGetComponents.OnServerInvoke(_, componentType)
   return componentLists[componentType]
