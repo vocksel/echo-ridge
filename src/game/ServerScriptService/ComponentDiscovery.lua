@@ -76,22 +76,20 @@ local function getSubTable(t, name)
   return t[name]
 end
 
--- Makes sure the Component has a properly set ComponentType.
-local function isComponentTypeSet(componentType, object)
-  if componentType.Value ~= "" then
-    return true
-  else
-    warn(string.format("%s is almost a Component, but its ComponentType "..
-      "has not been set.", object:GetFullName()))
-    return false
-  end
-end
-
--- Used with `find` to determine what Instances are Components.
-local function isComponent(object)
+-- Gets the ComponentType of an object (if it exists).
+--
+-- This gets used to simply get the ComponentType, along with being used with
+-- `find()` to locate all of the Components in the game.
+--
+-- It also makes sure any ComponentType it comes across has been set properly.
+local function getComponentType(object)
   local componentType = object:FindFirstChild("ComponentType")
+
   if componentType and componentType:IsA("StringValue") then
-    return isComponentTypeSet(componentType, object)
+    assert(componentType.Value ~= "", string.format("Value for '%s' not set",
+      componentType:GetFullName()))
+
+    return componentType.Value
   end
 end
 
@@ -107,16 +105,6 @@ local function isDisabled(object)
   if disabled and disabled:IsA("BoolValue") then
     return disabled.Value
   end
-end
-
--- Finds the type of Component we're dealing with.
---
--- Because of how `find()` works, we have to get the ComponentType after we
--- collect all of the Components.
-local function getComponentType(component)
-  -- This function should always be called after all the Components are
-  -- gathered, this ensures there's always a ComponentType to reference.
-  return component.ComponentType.Value
 end
 
 -- Sorts all of the components into lists based off their ComponentType.
@@ -140,7 +128,7 @@ end
 -- based off their ComponentType.
 local function getAllComponents(parent)
   return find(parent, function(object)
-    return isComponent(object) and not isDisabled(object)
+    return getComponentType(object) and not isDisabled(object)
   end)
 end
 
