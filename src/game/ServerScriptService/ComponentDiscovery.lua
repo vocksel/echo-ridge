@@ -35,7 +35,7 @@
     local remotes = require(replicatedStorage.Event.Remotes)
     local getComponents = remotes.getFunction("GetComponents")
 
-    local lightSwitches = getComponents("LightSwitches")
+    local lightSwitches = getComponents:InvokeServer("LightSwitches")
 
     for _, lightSwitch in ipairs(lightSwitches) do
       -- What happens next is up to you.
