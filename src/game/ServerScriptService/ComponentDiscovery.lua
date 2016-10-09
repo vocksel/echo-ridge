@@ -68,6 +68,14 @@ local find = require(replicatedStorage.Helpers.Find)
 
 local remotelyGetComponents = remotes.getFunction("GetComponents")
 
+-- Used when grouping Components together to create the ComponentType sub-tables.
+local function getSubTable(t, name)
+  if not t[name] then
+    t[name] = {}
+  end
+  return t[name]
+end
+
 -- Makes sure the Component has a properly set ComponentType.
 local function isComponentTypeSet(componentType, object)
   if componentType.Value ~= "" then
@@ -115,21 +123,12 @@ end
 --
 -- This keeps everything nice and organized, as if you have a ton of
 -- "TriggerWarp" and "ActionWarp" Components, they'll each get their own table.
-local function sortComponents(components)
+local function groupComponents(components)
   local sortedComponents = {}
 
-  -- Creates a table for a ComponentType if it doesn't exist already.
-  local function createComponentTable(componentType)
-    if not sortedComponents[componentType] then
-      sortedComponents[componentType] = {}
-    end
-    return sortedComponents[componentType]
-  end
-
   for _, component in ipairs(components) do
-    local componentType = getComponentType(component)
-    local componentsList = createComponentTable(componentType)
-    table.insert(componentsList, component)
+    local group = getSubTable(sortedComponents, getComponentType(component))
+    table.insert(group, component)
   end
 
   return sortedComponents
@@ -146,7 +145,7 @@ local function getComponents(parent)
 
   local components = find(parent, callback)
 
-  return sortComponents(components)
+  return groupComponents(components)
 end
 
 --------------------------------------------------------------------------------
