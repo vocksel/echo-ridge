@@ -28,8 +28,7 @@
   Instead of putting Scripts in each light switch to control them, you can add a
   ComponentType to each one. The Value could be "LightSwitch".
 
-  Now that you have all your Components setup, you can create a single Script to
-  manage them all:
+  From there you use the GetComponents RemoteFunction to collect the Components:
 
     local replicatedStorage = game:GetService("ReplicatedStorage")
     local remotes = require(replicatedStorage.Event.Remotes)
