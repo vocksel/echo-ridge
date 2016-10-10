@@ -65,6 +65,7 @@ local serverScripts = game:GetService("ServerScriptService")
 local COMPONENT_LOCATION = workspace
 
 local remotes = require(replicatedStorage.Events.Remotes)
+local expect = require(replicatedStorage.Helpers.Expect)
 local ComponentLookup = require(serverScripts.Components.ComponentLookup)
 
 local getComponents = remotes.getFunction("GetComponents")
@@ -72,6 +73,10 @@ local lookup = ComponentLookup.new()
 
 lookup:Propagate(COMPONENT_LOCATION)
 
-function getComponents.OnServerInvoke(_, componentType)
-  return lookup:GetComponents(componentType)
+function getComponents.OnServerInvoke(_, componentType, parent)
+  if parent then
+    return lookup:GetSubComponents(parent, componentType)
+  else
+    return lookup:GetComponents(componentType)
+  end
 end

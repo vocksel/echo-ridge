@@ -64,6 +64,12 @@
   GetComponents(string componentType)
     Gets all of the Components that have a ComponentType matching
     `componentType`.
+
+  GetSubComponents(Instance parent, string componentType)
+    Locations all of the Components under `parent`.
+
+    If `componentType` is supplied, only Components that have a matching
+    ComponentType will be returned.
 --]]
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -150,6 +156,23 @@ end
 
 function ComponentLookup:GetComponents(componentType)
   return self.GroupedComponents[componentType]
+end
+
+function ComponentLookup:GetSubComponents(parent, componentType)
+  local subComponents = {}
+  local components = self.Components
+
+  if componentType then
+    components = self.GroupedComponents[componentType]
+  end
+
+  for _, component in ipairs(components) do
+    if component:IsDescendantOf(parent) then
+      table.insert(subComponents, component)
+    end
+  end
+
+  return subComponents
 end
 
 return ComponentLookup
