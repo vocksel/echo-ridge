@@ -64,13 +64,7 @@
     print(list:IsEmpty()) -- false
 --]]
 
-local function getIndexOfValue(value, list)
-  for index, otherValue in ipairs(list) do
-    if value == otherValue then
-      return index
-    end
-  end
-end
+local getIndexOfValue = require(script.Parent.GetIndexOfValue)
 
 local Array = {}
 Array.__index = Array
