@@ -42,17 +42,20 @@
     A quick function to easily check if `obj` is a BasePart.
 --]]
 
+local function isRobloxInstance(obj)
+  return type(obj) == "userdata" and obj.ClassName
+end
+
 local expect = {}
 
 function expect.getType(obj)
-  return obj.ClassName or type(obj)
+  return isRobloxInstance(obj) or type(obj)
 end
 
 function expect.class(obj, className)
-  local isRobloxClass = obj.ClassName and obj:IsA(className)
+  local isRobloxClass = isRobloxInstance(obj) and obj:IsA(className)
   local isLuaClass = type(obj) == className
-
-  return isRobloxClass or isLuaClass
+  return  isRobloxClass or isLuaClass
 end
 
 function expect.classes(obj, ...)
