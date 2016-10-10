@@ -60,87 +60,18 @@
 --]]
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
+local serverScripts = game:GetService("ServerScriptService")
 
 local COMPONENT_LOCATION = workspace
 
 local remotes = require(replicatedStorage.Events.Remotes)
-local find = require(replicatedStorage.Helpers.Find)
+local ComponentLookup = require(serverScripts.Components.ComponentLookup)
 
-local remotelyGetComponents = remotes.getFunction("GetComponents")
+local getComponents = remotes.getFunction("GetComponents")
+local lookup = ComponentLookup.new()
 
--- Used when grouping Components together to create the ComponentType sub-tables.
-local function getSubTable(t, name)
-  if not t[name] then
-    t[name] = {}
-  end
-  return t[name]
-end
+lookup:Propagate(COMPONENT_LOCATION)
 
--- Gets the ComponentType of an object (if it exists).
---
--- This gets used to simply get the ComponentType, along with being used with
--- `find()` to locate all of the Components in the game.
---
--- It also makes sure any ComponentType it comes across has been set properly.
-local function getComponentType(object)
-  local componentType = object:FindFirstChild("ComponentType")
-
-  if componentType and componentType:IsA("StringValue") then
-    assert(componentType.Value ~= "", string.format("Value for '%s' not set",
-      componentType:GetFullName()))
-
-    return componentType.Value
-  end
-end
-
--- Allows Components to be disabled.
---
--- If there's a BoolValue named "Disabled" set to true inside of a Component,
--- the Component will be excluded from the final list.
---
--- This allows us to develop new Components without them being picked up
--- immediately so we don't go and break everything.
-local function isDisabled(object)
-  local disabled = object:FindFirstChild("Disabled")
-  if disabled and disabled:IsA("BoolValue") then
-    return disabled.Value
-  end
-end
-
--- Sorts all of the components into lists based off their ComponentType.
---
--- This keeps everything nice and organized, as if you have a ton of
--- "TriggerWarp" and "ActionWarp" Components, they'll each get their own table.
-local function groupComponents(components)
-  local sortedComponents = {}
-
-  for _, component in ipairs(components) do
-    local group = getSubTable(sortedComponents, getComponentType(component))
-    table.insert(group, component)
-  end
-
-  return sortedComponents
-end
-
--- Recurses through `parent` to get the list of all Components.
---
--- Returns a sorted list of all the components so they can be easily accessed
--- based off their ComponentType.
-local function getAllComponents(parent)
-  return find(parent, function(object)
-    return getComponentType(object) and not isDisabled(object)
-  end)
-end
-
-local function getGroupedComponents(parent)
-  local components = getAllComponents(parent)
-  return groupComponents(components)
-end
-
---------------------------------------------------------------------------------
-
-local componentLists = getGroupedComponents(COMPONENT_LOCATION)
-
-function remotelyGetComponents.OnServerInvoke(_, componentType)
-  return componentLists[componentType]
+function getComponents.OnServerInvoke(_, componentType)
+  return lookup:GetComponents(componentType)
 end
