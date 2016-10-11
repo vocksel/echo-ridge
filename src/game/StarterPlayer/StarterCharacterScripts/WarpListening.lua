@@ -87,6 +87,17 @@ local function setupActionWarp(warp, trigger)
   end)
 end
 
+-- Based on the type of Warp we're dealing with, we need to route it to a
+-- specific setup functions.
+local function setupWarp(warpType, warpModel)
+  local warp, trigger = getWarpComponents(warpModel)
+
+  if warpType == "Trigger" then
+    setupTriggerWarp(warp, trigger)
+  elseif warpType == "Action" then
+    setupActionWarp(warp, trigger)
+  end
+end
 
 --------------------------------------------------------------------------------
 -- Initialization
@@ -96,11 +107,5 @@ local warps = getComponents:InvokeServer("Warp")
 
 for _, warpModel in ipairs(warps) do
   local warpType = warpModel:FindFirstChild("WarpType")
-  local warp, trigger = getWarpComponents(warpModel)
-
-  if warpType.Value == "Trigger" then
-    setupTriggerWarp(warp, trigger)
-  elseif warpType.Value == "Action" then
-    setupActionWarp(warp, trigger)
-  end
+  setupWarp(warpType.Value, warpModel)
 end
