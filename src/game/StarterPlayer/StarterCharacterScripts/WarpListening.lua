@@ -40,25 +40,14 @@ local getComponents = transmit.getRemoteFunction("GetComponents")
 -- Warp Setup
 --------------------------------------------------------------------------------
 
-local function getTrigger(triggerPart)
-  local trigger = CharacterTrigger.new(triggerPart, character)
-  trigger:TouchListener()
-
-  return trigger
-end
-
-local function getWarp(linkedWarp)
-  local linkedWarp = linkedWarp.Value
+local function getWarpComponents(warpModel)
+  local linkedWarp = warpModel.LinkedWarp.Value
   local warp = Warp.new(linkedWarp.Pad)
 
-  return warp
-end
-
-local function getWarpComponents(warpModel)
-  local linkedWarp = warpModel.LinkedWarp
   local triggerPart = warpModel.Trigger
-  local warp = getWarp(linkedWarp)
-  local trigger = getTrigger(triggerPart)
+  local trigger = CharacterTrigger.new(triggerPart, character)
+
+  trigger:TouchListener()
 
   return warp, trigger
 end
