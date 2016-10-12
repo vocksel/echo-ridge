@@ -67,7 +67,7 @@ local transmit = require(replicatedStorage.Events.Transmit)
 local expect = require(replicatedStorage.Helpers.Expect)
 local ComponentLookup = require(serverScripts.Components.ComponentLookup)
 
-local getComponents = transmit.getFunction("GetComponents")
+local getComponents = transmit.getRemoteFunction("GetComponents")
 local lookup = ComponentLookup.new()
 
 lookup:Propagate(COMPONENT_LOCATION)

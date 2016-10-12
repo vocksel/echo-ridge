@@ -34,7 +34,7 @@ local prompt do
   prompt = InteractionPrompt.new(playerGui, inputName)
 end
 
-local getComponents = transmit.getFunction("GetComponents")
+local getComponents = transmit.getRemoteFunction("GetComponents")
 
 --------------------------------------------------------------------------------
 -- Warp Setup
