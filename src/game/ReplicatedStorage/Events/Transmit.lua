@@ -36,23 +36,13 @@ end
 
 local function getStorage()
   local storage = STORAGE_PARENT:FindFirstChild(STORAGE_NAME)
-
-  if not storage then
-    return new("Folder", STORAGE_PARENT, STORAGE_NAME)
-  else
-    return storage
-  end
+  return storage or new("Folder", STORAGE_PARENT, STORAGE_NAME)
 end
 
 local function getRemote(className, name)
   local storage = getStorage()
-  local remote = storage:FindFirstChild(name)
-
-  if not remote then
-    return new(className, storage, name)
-  else
-    return remote
-  end
+  local object = storage:FindFirstChild(name)
+  return object or new(className, storage, name)
 end
 
 --------------------------------------------------------------------------------
