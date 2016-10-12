@@ -7,14 +7,14 @@
   Usage:
 
     -- Server
-    local remotes = require(game.ReplicatedStorage.Remotes)
-    local event = remotes.getEvent("ServerMessage")
+    local transmit = require(game.ReplicatedStorage.Remotes)
+    local event = transmit.getEvent("ServerMessage")
 
     event:FireAllClients("Greetings from the server!")
 
     -- Client
-    local remotes = require(game.ReplicatedStorage.Remotes)
-    local event = remotes.getEvent("ServerMessage")
+    local transmit = require(game.ReplicatedStorage.Remotes)
+    local event = transmit.getEvent("ServerMessage")
 
     event.OnClientEvent:connect(function(msg)
       print(msg) -- "Greetings from the server!"
@@ -23,7 +23,7 @@
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local remotes = {}
+local transmit = {}
 
 local STORAGE_NAME = "RemoteStorage"
 local STORAGE_PARENT = replicatedStorage
@@ -57,14 +57,14 @@ end
 
 --------------------------------------------------------------------------------
 
-function remotes.getEvent(name)
+function transmit.getEvent(name)
   assert(type(name) == "string", "Please specify a name for your RemoteEvent.")
   return getRemote("RemoteEvent", name)
 end
 
-function remotes.getFunction(name)
+function transmit.getFunction(name)
   assert(type(name) == "string", "Please specify a name for your RemoteFunction.")
   return getRemote("RemoteFunction", name)
 end
 
-return remotes
+return transmit

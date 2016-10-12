@@ -11,7 +11,7 @@
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local remotes = require(replicatedStorage.Events.Remotes)
+local transmit = require(replicatedStorage.Events.Transmit)
 local Warp = require(replicatedStorage.Warping.Warp)
 local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
 local Interact = require(replicatedStorage.Interaction.Interact)
@@ -34,7 +34,7 @@ local prompt do
   prompt = InteractionPrompt.new(playerGui, inputName)
 end
 
-local getComponents = remotes.getFunction("GetComponents")
+local getComponents = transmit.getFunction("GetComponents")
 
 --------------------------------------------------------------------------------
 -- Warp Setup

@@ -31,8 +31,8 @@
   From there you use the GetComponents RemoteFunction to collect the Components:
 
     local replicatedStorage = game:GetService("ReplicatedStorage")
-    local remotes = require(replicatedStorage.Event.Remotes)
-    local getComponents = remotes.getFunction("GetComponents")
+    local transmit = require(replicatedStorage.Event.Transmit)
+    local getComponents = transmit.getFunction("GetComponents")
 
     local lightSwitches = getComponents:InvokeServer("LightSwitches")
 
@@ -63,11 +63,11 @@ local serverScripts = game:GetService("ServerScriptService")
 
 local COMPONENT_LOCATION = workspace
 
-local remotes = require(replicatedStorage.Events.Remotes)
+local transmit = require(replicatedStorage.Events.Transmit)
 local expect = require(replicatedStorage.Helpers.Expect)
 local ComponentLookup = require(serverScripts.Components.ComponentLookup)
 
-local getComponents = remotes.getFunction("GetComponents")
+local getComponents = transmit.getFunction("GetComponents")
 local lookup = ComponentLookup.new()
 
 lookup:Propagate(COMPONENT_LOCATION)
