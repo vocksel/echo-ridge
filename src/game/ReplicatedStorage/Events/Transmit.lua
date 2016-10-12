@@ -25,7 +25,7 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local transmit = {}
 
-local STORAGE_NAME = "RemoteStorage"
+local STORAGE_NAME = "TransmitStorage"
 local STORAGE_PARENT = replicatedStorage
 
 local function new(className, parent, name)
