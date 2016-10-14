@@ -28,10 +28,19 @@
 
   TeleporttoPad(Model model)
     Moves `model` on top of `pad`. This is usually the client's Character.
+
+  Events
+  ------
+
+  Model Warped
+    Fired when teleportation has successfully completed.
+
+    Returns the Model that was warped.
 --]]
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local expect = require(replicatedStorage.Helpers.Expect)
+local Signal = require(replicatedStorage.Events.Signal)
 
 --[[
   Moves `model` on top of `locationPart`.
@@ -63,12 +72,15 @@ function Warp.new(pad)
 
   self.Pad = pad
 
+  self.Warped = Signal.new()
+
   return self
 end
 
 function Warp:TeleportToPad(model)
   assert(model, "Could not teleport (Model expected, got nil)")
   teleportOnTop(model, self.Pad)
+  self.Warped:fire(model)
 end
 
 return Warp
