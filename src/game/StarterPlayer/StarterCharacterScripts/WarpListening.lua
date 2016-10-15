@@ -21,6 +21,14 @@ local client = players.LocalPlayer
 local playerGui = client.PlayerGui
 local character = client.Character
 
+-- We fire this once the client has been warped. This then passes off the
+-- changing of Cells to StarterPlayerScripts.CellHandler.
+local warpedToCell = transmit.getLocalEvent("WarpedToCell")
+
+local getComponents = transmit.getRemoteFunction("GetComponents")
+local warpModels = getComponents:InvokeServer("Warp")
+local cellModels = getComponents:InvokeServer("Cell")
+
 local interact = Interact.new()
 local prompt do
   -- This is a little messy but right now InteractionPrompt only works off of a
@@ -34,7 +42,17 @@ local prompt do
   prompt = InteractionPrompt.new(playerGui, inputName)
 end
 
-local getComponents = transmit.getRemoteFunction("GetComponents")
+-- Allows you to check if an Instance is a child of one of the Cell Components.
+--
+-- This is used to check if the Warp's Pad the client has just been teleported
+-- to is inside a Cell.
+local function getParentCell(object)
+  for _, cellModel in ipairs(cellModels) do
+    if object:IsDescendantOf(cellModel) then
+      return cellModel
+    end
+  end
+end
 
 --------------------------------------------------------------------------------
 -- Warp Setup
@@ -80,6 +98,13 @@ end
 -- specific setup functions.
 local function setupWarp(warpType, warpModel)
   local warp, trigger = getWarpComponents(warpModel)
+  local parentCell = getParentCell(warp.Pad)
+
+  if parentCell then
+    warp.Warped:connect(function()
+      warpedToCell:Fire(parentCell)
+    end)
+  end
 
   if warpType == "Trigger" then
     setupTriggerWarp(warp, trigger)
@@ -92,9 +117,7 @@ end
 -- Initialization
 --------------------------------------------------------------------------------
 
-local warps = getComponents:InvokeServer("Warp")
-
-for _, warpModel in ipairs(warps) do
+for _, warpModel in ipairs(warpModels) do
   local warpType = warpModel:FindFirstChild("WarpType")
   setupWarp(warpType.Value, warpModel)
 end
