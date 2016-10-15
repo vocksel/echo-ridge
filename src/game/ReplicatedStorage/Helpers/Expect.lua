@@ -59,12 +59,12 @@ function expect.class(obj, className)
 end
 
 function expect.classes(obj, ...)
-  for _, class in ipairs{...} do
-    if not expect.class(class) then
-      return false
+  for _, className in ipairs{...} do
+    if expect.class(obj, className) then
+      return true
     end
   end
-  return true
+  return false
 end
 
 function expect.basePart(obj)
