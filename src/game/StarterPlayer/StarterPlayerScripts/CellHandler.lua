@@ -4,7 +4,7 @@ local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local transmit = require(replicatedStorage.Events.Transmit)
-local Cell = require(replicatedStorage.Level.Cell)
+local LocalCell = require(replicatedStorage.Level.LocalCell)
 local LocalWorld = require(replicatedStorage.Level.LocalWorld)
 
 local client = players.LocalPlayer
@@ -14,10 +14,26 @@ local function getCellModels()
   return getComponents:InvokeServer("Cell")
 end
 
+local function getNewCell(cellModel)
+  local cell = LocalCell.new(cellModel.Name)
+
+  -- HACK This isn't a very clean way of setting the TimeOfDay of the Cell. For
+  -- right now we really just need a TimeOfDay changing implementation, but this
+  -- should be cleaned up as soon as possible.
+  --
+  -- See CellEntered connection in setupWorld() for related code.
+  local timeOfDay = cellModel:FindFirstChild("TimeOfDay")
+  if timeOfDay then
+    cell.TimeOfDay = timeOfDay.Value
+  end
+
+  return cell
+end
+
 local function getCellsFromModels(cellModels)
   local cells = {}
   for _, cellModel in ipairs(cellModels) do
-    table.insert(cells, Cell.new(cellModel.Name))
+    table.insert(cells, getNewCell(cellModel))
   end
   return cells
 end
@@ -31,6 +47,10 @@ local function setupWorld()
   -- client has been Warped to one of the Cell Models. From here we can perform
   -- the action to actually move them into the Cell.
   local warpedToCell = transmit.getLocalEvent("WarpedToCell")
+
+  world.CellEntered:connect(function(cell)
+    if cell.TimeOfDay then cell:UseTimeOfDay() end
+  end)
 
   -- Start off in Geo's Room.
   world:EnterCell("GeosRoom")
