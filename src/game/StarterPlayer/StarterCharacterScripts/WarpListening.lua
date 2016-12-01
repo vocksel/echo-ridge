@@ -26,8 +26,6 @@ local character = client.Character
 local warpedToCell = transmit.getLocalEvent("WarpedToCell")
 
 local getComponents = transmit.getRemoteFunction("GetComponents")
-local warpModels = getComponents:InvokeServer("Warp")
-local cellModels = getComponents:InvokeServer("Cell")
 
 local interact = Interact.new()
 local prompt do
@@ -47,6 +45,8 @@ end
 -- This is used to check if the Warp's Pad the client has just been teleported
 -- to is inside a Cell.
 local function getParentCell(object)
+  local cellModels = getComponents:InvokeServer("Cell")
+
   for _, cellModel in ipairs(cellModels) do
     if object:IsDescendantOf(cellModel) then
       return cellModel
@@ -116,6 +116,8 @@ end
 --------------------------------------------------------------------------------
 -- Initialization
 --------------------------------------------------------------------------------
+
+local warpModels = getComponents:InvokeServer("Warp")
 
 for _, warpModel in ipairs(warpModels) do
   local warpType = warpModel:FindFirstChild("WarpType")
