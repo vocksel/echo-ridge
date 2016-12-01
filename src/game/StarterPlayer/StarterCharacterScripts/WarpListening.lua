@@ -117,9 +117,13 @@ end
 -- Initialization
 --------------------------------------------------------------------------------
 
-local warpModels = getComponents:InvokeServer("Warp")
+local function init()
+  local warpModels = getComponents:InvokeServer("Warp")
 
-for _, warpModel in ipairs(warpModels) do
-  local warpType = warpModel:FindFirstChild("WarpType")
-  setupWarp(warpType.Value, warpModel)
+  for _, warpModel in ipairs(warpModels) do
+    local warpType = warpModel:FindFirstChild("WarpType")
+    setupWarp(warpType.Value, warpModel)
+  end
 end
+
+init()
