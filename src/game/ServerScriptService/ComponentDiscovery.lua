@@ -72,16 +72,9 @@ local lookup = ComponentLookup.new()
 
 lookup:Propagate(COMPONENT_LOCATION)
 
-function getComponents.OnServerInvoke(_, componentType, parent)
+function getComponents.OnServerInvoke(_, componentType)
   assert(type(componentType) == "string", string.format("bad argument #1 to "..
     "GetComponents (string expected, got %s)", expect.getType(componentType)))
 
-  if parent then
-    assert(expect.class(parent, "Instance"), string.format("bad argument #2 "..
-    "to GetComponents (Instance expected, got %s)", expect.getType(parent)))
-
-    return lookup:GetSubComponents(parent, componentType)
-  else
-    return lookup:GetComponents(componentType)
-  end
+  return lookup:GetComponents(componentType)
 end
