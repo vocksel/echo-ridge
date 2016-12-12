@@ -59,13 +59,13 @@
 --]]
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
-local serverScripts = game:GetService("ServerScriptService")
+local serverStorage = game:GetService("ServerStorage")
 
 local COMPONENT_LOCATION = workspace
 
 local transmit = require(replicatedStorage.Events.Transmit)
 local expect = require(replicatedStorage.Helpers.Expect)
-local ComponentLookup = require(serverScripts.Components.ComponentLookup)
+local ComponentLookup = require(serverStorage.Components.ComponentLookup)
 
 local getComponents = transmit.getRemoteFunction("GetComponents")
 local lookup = ComponentLookup.new()

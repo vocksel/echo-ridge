@@ -1,7 +1,7 @@
 local players = game:GetService("Players")
-local serverScripts = game:GetService("ServerScriptService")
+local serverStorage = game:GetService("ServerStorage")
 
-local PlayerData = require(script.Parent.Data.PlayerData)
+local PlayerData = require(serverStorage.Data.PlayerData)
 
 local function configurePlayer(player)
   -- Health does not play a part in the game and can be hidden from view.
