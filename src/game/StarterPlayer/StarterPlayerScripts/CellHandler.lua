@@ -3,16 +3,12 @@
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
+local components = require(replicatedStorage.Services.Shared.ComponentService)
 local transmit = require(replicatedStorage.Events.Transmit)
 local LocalCell = require(replicatedStorage.Level.LocalCell)
 local LocalWorld = require(replicatedStorage.Level.LocalWorld)
 
 local client = players.LocalPlayer
-
-local function getCellModels()
-  local getComponents = transmit.getRemoteFunction("GetComponents")
-  return getComponents:InvokeServer("Cell")
-end
 
 local function getNewCell(cellModel)
   local cell = LocalCell.new(cellModel.Name)
@@ -39,7 +35,7 @@ local function getCellsFromModels(cellModels)
 end
 
 local function setupWorld()
-  local cellModels = getCellModels()
+  local cellModels = components:GetByType("Cell")
   local cells = getCellsFromModels(cellModels)
   local world = LocalWorld.new(cells, client)
 

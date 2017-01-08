@@ -1,8 +1,8 @@
 --[[
-  ComponentDiscovery
+  ComponentService
   ==================
 
-  Handles the discovery of "Components".
+  Handles everything to do with Components.
 
   A Component is what we call an Instance (or group of Instances) in the game
   that are used in conjunction with other classes.
@@ -31,10 +31,9 @@
   From there you use the GetComponents RemoteFunction to collect the Components:
 
     local replicatedStorage = game:GetService("ReplicatedStorage")
-    local transmit = require(replicatedStorage.Event.Transmit)
-    local getComponents = transmit.getFunction("GetComponents")
+    local components = require(replicatedStorage.Services.Shared.ComponentSevices)
 
-    local lightSwitches = getComponents:InvokeServer("LightSwitches")
+    local lightSwitches = components:GetByType("LightSwitches")
 
     for _, lightSwitch in ipairs(lightSwitches) do
       -- What happens next is up to you.
@@ -57,24 +56,30 @@
   we'll repremand the client. This will come in the form of either rolling back
   the changes they made, kicking them from the server, or something similar.
 --]]
-
 local replicatedStorage = game:GetService("ReplicatedStorage")
-local serverStorage = game:GetService("ServerStorage")
+
+local route = require(replicatedStorage.Services.Modules.Route)
+local ComponentLookup = require(replicatedStorage.Components.ComponentLookup)
+local expect = require(replicatedStorage.Helpers.Expect)
 
 local COMPONENT_LOCATION = workspace
 
-local transmit = require(replicatedStorage.Events.Transmit)
-local expect = require(replicatedStorage.Helpers.Expect)
-local ComponentLookup = require(serverStorage.Components.ComponentLookup)
+local function getLookup()
+  local lookup = ComponentLookup.new()
+  lookup:Propagate(COMPONENT_LOCATION)
 
-local getComponents = transmit.getRemoteFunction("GetComponents")
-local lookup = ComponentLookup.new()
-
-lookup:Propagate(COMPONENT_LOCATION)
-
-function getComponents.OnServerInvoke(_, componentType)
-  assert(type(componentType) == "string", string.format("bad argument #1 to "..
-    "GetComponents (string expected, got %s)", expect.getType(componentType)))
-
-  return lookup:GetComponents(componentType)
+  return lookup
 end
+
+local components = {
+  lookup = getLookup()
+}
+
+function components:GetByType(componentType)
+  assert(type(componentType) == "string", string.format("bad argument #1 to "..
+    "GetByType (string expected, got %s)", expect.getType(componentType)))
+
+  return self.lookup:GetComponents(componentType)
+end
+
+return route(script.Name, components)

@@ -11,6 +11,7 @@
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
+local components = require(replicatedStorage.Services.Shared.ComponentService)
 local transmit = require(replicatedStorage.Events.Transmit)
 local Warp = require(replicatedStorage.Warping.Warp)
 local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
@@ -24,8 +25,6 @@ local character = client.Character
 -- We fire this once the client has been warped. This then passes off the
 -- changing of Cells to StarterPlayerScripts.CellHandler.
 local warpedToCell = transmit.getLocalEvent("WarpedToCell")
-
-local getComponents = transmit.getRemoteFunction("GetComponents")
 
 local interact = Interact.new()
 local prompt do
@@ -45,7 +44,7 @@ end
 -- This is used to check if the Warp's Pad the client has just been teleported
 -- to is inside a Cell.
 local function getParentCell(object)
-  local cellModels = getComponents:InvokeServer("Cell")
+  local cellModels = components:GetByType("Cell")
 
   for _, cellModel in ipairs(cellModels) do
     if object:IsDescendantOf(cellModel) then
@@ -118,7 +117,7 @@ end
 --------------------------------------------------------------------------------
 
 local function init()
-  local warpModels = getComponents:InvokeServer("Warp")
+  local warpModels = components:GetByType("Warp")
 
   for _, warpModel in ipairs(warpModels) do
     local warpType = warpModel:FindFirstChild("WarpType")
