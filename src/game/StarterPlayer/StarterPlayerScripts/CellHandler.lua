@@ -3,7 +3,7 @@
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local components = require(replicatedStorage.Services.Shared.ComponentService)
+local components = require(replicatedStorage.Services.ComponentService)
 local transmit = require(replicatedStorage.Events.Transmit)
 local LocalCell = require(replicatedStorage.Level.LocalCell)
 local LocalWorld = require(replicatedStorage.Level.LocalWorld)

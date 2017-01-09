@@ -1,3 +1,5 @@
+-- ClassName: ModuleScript
+
 --[[
   ComponentService
   ==================
@@ -56,30 +58,38 @@
   we'll repremand the client. This will come in the form of either rolling back
   the changes they made, kicking them from the server, or something similar.
 --]]
-local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local route = require(replicatedStorage.Services.Modules.Route)
-local ComponentLookup = require(replicatedStorage.Components.ComponentLookup)
-local expect = require(replicatedStorage.Helpers.Expect)
+local run = game:GetService("RunService")
 
-local COMPONENT_LOCATION = workspace
+if run:IsServer() then
+  local replicatedStorage = game:GetService("ReplicatedStorage")
+  local serverStorage = game:GetService("ServerStorage")
 
-local function getLookup()
-  local lookup = ComponentLookup.new()
-  lookup:Propagate(COMPONENT_LOCATION)
+  local ComponentLookup = require(serverStorage.Components.ComponentLookup)
+  local expect = require(replicatedStorage.Helpers.Expect)
 
-  return lookup
+  local COMPONENT_LOCATION = workspace
+
+  local function getLookup()
+    local lookup = ComponentLookup.new()
+    lookup:Propagate(COMPONENT_LOCATION)
+
+    return lookup
+  end
+
+  local components = {
+    lookup = getLookup()
+  }
+
+  function components:GetByType(componentType)
+    assert(type(componentType) == "string", string.format("bad argument #1 to "..
+      "GetByType (string expected, got %s)", expect.getType(componentType)))
+
+    return self.lookup:GetComponents(componentType)
+  end
+
+  return components
+else
+  local route = require(script.Parent.Modules.Route)
+  return route(script)
 end
-
-local components = {
-  lookup = getLookup()
-}
-
-function components:GetByType(componentType)
-  assert(type(componentType) == "string", string.format("bad argument #1 to "..
-    "GetByType (string expected, got %s)", expect.getType(componentType)))
-
-  return self.lookup:GetComponents(componentType)
-end
-
-return route(script.Name, components)

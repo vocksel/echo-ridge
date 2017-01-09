@@ -11,7 +11,7 @@
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local components = require(replicatedStorage.Services.Shared.ComponentService)
+local components = require(replicatedStorage.Services.ComponentService)
 local transmit = require(replicatedStorage.Events.Transmit)
 local Warp = require(replicatedStorage.Warping.Warp)
 local CharacterTrigger = require(replicatedStorage.Triggers.CharacterTrigger)
