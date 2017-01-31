@@ -1,5 +1,3 @@
--- ClassName: LocalScript
-
 local players = game:GetService("Players")
 local run = game:GetService("RunService")
 

@@ -1,5 +1,3 @@
--- ClassName: LocalScript
-
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 

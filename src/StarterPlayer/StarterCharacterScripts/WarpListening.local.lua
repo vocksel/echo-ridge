@@ -1,5 +1,3 @@
--- ClassName: LocalScript
-
 --[[
   WarpListening
   =============
