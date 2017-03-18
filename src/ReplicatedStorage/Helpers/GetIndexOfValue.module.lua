@@ -5,10 +5,12 @@
   Super simple helper function to get the index of a value in a table.
 
   This is primarily used in conjunction with table.remove, as we will sometimes
-  know the value, but not the index. This allows us to pass in the value, get
-  the index, and then remove that value from the table.
+  know the value of an item, but not its index.
 
-  Note that this only works on index-based tables (arrays), not key-value
+  This allows us to pass in the value, get the index, and then remove that value
+  from the table.
+
+  Note that this only works on index-value tables (arrays), not key-value
   (dictionaries).
 
   Usage

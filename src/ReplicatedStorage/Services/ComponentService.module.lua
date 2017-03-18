@@ -1,62 +1,51 @@
--- ClassName: ModuleScript
-
 --[[
   ComponentService
   ==================
 
-  Handles everything to do with Components.
+  Service for Component retrieval.
 
-  A Component is what we call an Instance (or group of Instances) in the game
-  that are used in conjunction with other classes.
+  A Componnet is an object in the game that you want to apply functionality to.
 
-  Components are currently only used client-side, but in the future this will be
-  changed to allow the server more control. (See "For the Future" below)
+  To do this normally, you may find yourself putting Scripts into a Model, then
+  copy/pasting the Model around the game. This is a bad practice, as when you
+  want to update the functionality of the Model, you have to change the Scripts
+  in each copy.
+
+  When you define a Model as a Component, you can use this service to grab all
+  Components of the same type, and apply the functionality on all of them from a
+  single location.
+
+  In essence, this system is just a way to tag and retrieve objects.
 
   Defining a Component
   --------------------
 
-  A Component is any Instance that has a StringValue named "ComponentType". The
-  Value determines the name of the Component.
+  Simply add a StringValue named "ComponentType" inside of an object in the
+  game to turn it into a Component.
 
-  Components with the same ComponentType will be grouped together for easy
-  accessibility.
+  The Value of ComponentType determines the type of Component it is. Component's
+  with matching ComponentTypes are grouped together.
 
   Usage
   -----
 
-  Say you're building an apartment and you want to light switches to turn the
-  lights on and off.
+  Say you're building an apartment. You have some light switches on the wall
+  that you want to turn the lights in the apartment on and off.
 
   Instead of putting Scripts in each light switch to control them, you can add a
   ComponentType to each one. The Value could be "LightSwitch".
 
-  From there you use the GetComponents RemoteFunction to collect the Components:
+  Then you can use this service to gather up all the LightSwitch Components and
+  apply functionality from one Script:
 
     local replicatedStorage = game:GetService("ReplicatedStorage")
-    local components = require(replicatedStorage.Services.Shared.ComponentSevices)
+    local components = require(replicatedStorage.Services.ComponentSevices)
 
     local lightSwitches = components:GetByType("LightSwitches")
 
     for _, lightSwitch in ipairs(lightSwitches) do
       -- What happens next is up to you.
     end
-
-  For the Future
-  --------------
-
-  This Script handles the gathering of all the Components for the client, but
-  right now the client has the freedom to turn anything in the game into any of
-  the available classes in ReplicatedStorage.
-
-  Eventually we'll be counteracting this by making the server the authority
-  figure, where all of the Components it gathers are the only Instances that the
-  client can work with.
-
-  When these countermeasures are implemented, if the client (for example)
-  attempts to turn a TriggerPart into a Warp, the server will check the
-  TriggerPart against the list of Warp Components. If it's not in the list,
-  we'll repremand the client. This will come in the form of either rolling back
-  the changes they made, kicking them from the server, or something similar.
 --]]
 
 local run = game:GetService("RunService")

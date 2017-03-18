@@ -5,8 +5,10 @@
   Trigger for Character detection. Inherits RegionTrigger.
 
   This is typically used by the client so that they can detect when their
-  Character is inside one of the Trigger Parts. They then bind actions while
-  they're inside the trigger so they can interact with the world.
+  Character is inside one of the Trigger Parts.
+
+  The client can then bind actions while inside of the trigger so they can
+  interact with the world.
 
   Connstructors
   -------------

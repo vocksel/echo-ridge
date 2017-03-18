@@ -2,31 +2,31 @@
   Array
   =====
 
-  Class to make working with index-key tables easier.
+  Dedicated class for index-based tables.
 
-  This is intended for use as a whitelist for the Trigger classes so that we
-  only detect certain Parts.
+  Lua does not make a distinction between arrays and dictionaries. A table can
+  be both. This class is used to solidify the concept of an array, and comes
+  with some helpful methods.
 
   Constructors
   ------------
 
-  Array.new(table items)
-    Creates a new Array with `items` as the default for self.Items.
-
-    If not supplied, `items` defaults to an empty table.
+  Array.new(table items={})
+    Creates a new Array, filled with `items`.
 
   Properties
   ----------
 
   Items (table)
-    Holds all of the items in the Array. You should use Add() and Remove()
-    instead of accessing this directly.
+    Holds all of the items in the Array.
+
+    Use Add() and Remove() instead of accessing this directly.
 
   Methods
   -------
 
   IsEmpty()
-    Checks if the Array has any items or not.
+    Returns true if there are any entries in self.Items. False otherwise.
 
   Add(value)
     Adds `value` to self.Items.
@@ -38,30 +38,29 @@
     Removes `value` from self.Items.
 
   Has(value)
-    Checks if `value` exists inside of self.Items.
+    Returns true if `value` exists inside of self.Items. False otherwise.
 
   Usage
   -----
 
-    local list = Array.new()
+    local array = Array.new()
 
-    print(list:IsEmpty()) -- true
+    print(array:IsEmpty()) -- true
 
     list:Add("String")
 
-    print(list:Has("String")) -- true
+    print(array:IsEmpty()) -- false
+    print(array:Has("String")) -- true
 
     local function hello(name)
       return string.format("Hello %s!", name or "World")
     end
 
-    list:Add(hello)
-    print(list:Has(hello)) -- true
+    array:Add(hello)
+    print(array:Has(hello)) -- true
 
-    list:Remove(hello)
-    print(list:Has(hello)) -- false
-
-    print(list:IsEmpty()) -- false
+    array:Remove(hello)
+    print(array:Has(hello)) -- false
 --]]
 
 local getIndexOfValue = require(script.Parent.GetIndexOfValue)
