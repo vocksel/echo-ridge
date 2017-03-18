@@ -96,17 +96,6 @@ local expect = require(replicatedStorage.Helpers.Expect)
 local Signal = require(replicatedStorage.Events.Signal)
 local Cell = require(script.Parent.Cell)
 
--- Makes sure we get the correct input for Cell parameters.
---
--- Both Cells and Strings are supported, as we want to be able to work on a Cell
--- that's been passed directly, or retrieve a Cell by name if passed as a string.
-local function assertIsCell(value, argNumber, funcName)
-  local message = string.format("bad argument #%i to %s (Cell/string "..
-    "expected, got %s)", argNumber, funcName, expect.getType(value))
-
-  assert(expect.classes(value, "string", "table"), message)
-end
-
 --------------------------------------------------------------------------------
 
 local World = {}
@@ -134,19 +123,23 @@ end
 
 -- This is used so you can use either a string or a direct reference to a Cell.
 function World:_GetByCellOrName(cell)
-  assertIsCell(cell, 1, "_GetByCellOrName")
+  expect(cell, { "Cell", "string" }, 1, "_GetByCellOrName")
 
-  return type(cell) == "string" and self:GetCellByName(cell) or cell
+  if type(cell) == "string" then
+    return self:GetCellByName(cell)
+  else
+    return cell
+  end
 end
 
 function World:AddCell(cell)
-  assertIsCell(cell, 1, "AddCell")
+  expect(cell, { "Cell", "string" }, 1, "AddCell")
 
   table.insert(self.Cells, cell)
 end
 
 function World:RemoveCell(cell)
-  assertIsCell(cell, 1, "RemoveCell")
+  expect(cell, { "Cell", "string" }, 1, "RemoveCell")
 
   cell = self:_GetByCellOrName(cell)
 
@@ -173,7 +166,7 @@ function World:LeaveCurrentCell(player)
 end
 
 function World:EnterCell(cell, player)
-  assertIsCell(cell, 1, "EnterCell")
+  expect(cell, { "Cell", "string" }, 1, "EnterCell")
 
   cell = self:_GetByCellOrName(cell)
   self:LeaveCurrentCell(player)

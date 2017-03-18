@@ -71,8 +71,7 @@ if run:IsServer() then
   }
 
   function components:GetByType(componentType)
-    assert(type(componentType) == "string", string.format("bad argument #1 to "..
-      "GetByType (string expected, got %s)", expect.getType(componentType)))
+    expect(componentType, "string", 1, "GetByType")
 
     return self.lookup:GetComponents(componentType)
   end

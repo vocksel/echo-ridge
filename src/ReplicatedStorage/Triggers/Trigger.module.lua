@@ -111,8 +111,7 @@ local Trigger = {}
 Trigger.__index = Trigger
 
 function Trigger.new(triggerPart)
-  assert(expect.basePart(triggerPart), string.format("bad argument #1 to "..
-    "'new' (Part expected, got %s)", expect.getType(triggerPart)))
+  assert(expect(triggerPart, "BasePart", 1, "new"))
 
   local self = {}
   setmetatable(self, Trigger)

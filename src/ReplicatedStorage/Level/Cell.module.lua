@@ -136,20 +136,6 @@ local expect = require(replicatedStorage.Helpers.Expect)
 local getIndexOfValue = require(replicatedStorage.Helpers.GetIndexOfValue)
 local Signal = require(replicatedStorage.Events.Signal)
 
--- Cells just insert whatever gets passed to them into self.Players, so we use
--- this to make sure that we only accept Player instances, otherwise if the user
--- makes a mistake and passes in a nil value, we could have some problems.
-local function assertIsPlayer(value, argNumber, funcName)
-  -- assert(expect.class(value, "Player"), expect.getErrorMsg(argNumber, funcName))
-  --
-  -- expect.assertIs(value, "Player", expect.errorMsg(argNumber, funcName))
-
-  local message = string.format("bad argument #%i to %s (Player expected, "..
-    "got %s)", argNumber, funcName, expect.getType(value))
-
-  assert(expect.class(value, "Player"), message)
-end
-
 --------------------------------------------------------------------------------
 
 local Cell = {}
@@ -175,20 +161,20 @@ function Cell:__tostring()
 end
 
 function Cell:IsInCell(player)
-  assertIsPlayer(player, 1, "IsInCell")
+  assert(expect(player, "Player", 1, "IsInCell"))
 
   return getIndexOfValue(player, self.Players) and true or false
 end
 
 function Cell:Enter(player)
-  assertIsPlayer(player, 1, "Enter")
+  assert(expect(player, "Player", 1, "Player"))
 
   table.insert(self.Players, player)
   self.Entered:fire(player)
 end
 
 function Cell:Leave(player)
-  assertIsPlayer(player, 1, "Leave")
+  assert(expect(player, "Player", 1, "Leave"))
 
   local index = getIndexOfValue(player, self.Players)
   if index then

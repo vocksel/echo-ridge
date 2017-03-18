@@ -2,73 +2,92 @@
   Expect
   ======
 
-  Contains functions for use with assert() calls.
-
-  These are used to take the class checking out of assertion calls so you don't
-  need to write tons of conditions.
+  Provides type checking and consistent error messages when using assert().
 
   Usage
   -----
 
-  local function onlyAcceptParts(obj)
-    assert(expect.class(obj, "BasePart"), string.format("bad argument #1 to "..
-      "onlyAcceptParts (BasePart expected, got %s)", expect.getType(obj)))
+  Simply asserting that an object in the game is a BasePart:
 
-    doSomethingWithThePart(obj)
-  end
+    local function onlyAcceptParts(object)
+      assert(expect(object, "BasePart", 1, "onlyAcceptParts"))
+      -- bad argument #1 to 'onlyAcceptParts' (BasePart expected, got nil)"
+    end
 
-  API
-  ---
+  Checking a value against multiple types:
 
-  expect.getType(Instance obj)
-    Returns the class name of `obj`.
+    local function tell(nameOrId, msg)
+      assert(expect(nameOrId, { "string", "number" }, 1, "tell"))
+      -- bad argument #1 to 'tell' (string/number expected, got nil)
 
-    This is used with the assertion message to output the type of the object
-    you're working with.
+      assert(expect(msg, "string", 2, "tell"))
+      -- bad argument #2 to 'tell' (string expected, got nil)
+    end
 
-    This function accounts for both ROBLOX and Lua classes, so you don't need to
-    worry about any special type checking.
+  Parameters
+  ----------
 
-  expect.class(Instance obj, string className)
-    Checks if `obj` is a `className` instance.
+  value (any)
+    This is the value whose type will be compared against the list of types
+    specified in the next parameter.
 
-    This first checks if obj is one of ROBLOX's classes, and if that fails
-    checks if it's one of the built-in Lua classes.
+  types (string/table)
+    A string of one of the Lua or Roblox types. Can also be a table containing
+    multiple strings for all the types you want to allow.
 
-  expect.classes(Instance obj, string ...)
-    Allows you to check if `obj` is any number of classes.
+  argNumber (int)
+    The position of the argument you're checking.
 
-  expect.basePart(Instance obj)
-    A quick function to easily check if `obj` is a BasePart.
+    For example, if you had the following function, the `name` argument is at
+    position 1, and the `msg` argument is at position 2.
+
+      local function tell(nameOrId, msg)
+        -- ...
+      end
+
+    This is used to output which argument was the cause of the error.
+
+  funcName (string)
+    The name of the function where the assertion failed.
 --]]
 
-local function isRobloxInstance(obj)
-  return type(obj) == "userdata" and obj.ClassName
+local function formatClassNames(classNames)
+  return table.concat(classNames, "/")
 end
 
-local expect = {}
-
-function expect.getType(obj)
-  return isRobloxInstance(obj) or type(obj)
+local function getClassName(value)
+  local type = typeof(value)
+  if type == "Instance" then
+    return value.ClassName
+  else
+    return type
+  end
 end
 
-function expect.class(obj, className)
-  local isRobloxClass = isRobloxInstance(obj) and obj:IsA(className)
-  local isLuaClass = type(obj) == className
-  return  isRobloxClass or isLuaClass
+local function getMessage(value, classNames, argNumber, funcName)
+  return string.format("bad argument #%i to '%s' (%s expected, got %s)",
+    argNumber, funcName, formatClassNames(classNames), getClassName(value))
 end
 
-function expect.classes(obj, ...)
-  for _, className in ipairs{...} do
-    if expect.class(obj, className) then
-      return true
+local function expect(value, classNames, argNumber, funcName)
+  -- Allows the user to pass in a table or string for the expected classes.
+  if type(classNames) == "string" then
+    classNames = { classNames }
+  end
+
+  for _, className in ipairs(classNames) do
+    local isRobloxClass = typeof(value) == "Instance" and value:IsA(className)
+    local isLuaClass = typeof(value) == className
+
+    if not isRobloxClass and not isLuaClass then
+      -- Because this function is used with assert(), we return the arguments it
+      -- expects. `false` is the condition, causing the assertion to fail and
+      -- display the message.
+      return false, getMessage(value, classNames, argNumber, funcName)
     end
   end
-  return false
-end
 
-function expect.basePart(obj)
-  return expect.class(obj, "BasePart")
+  return true
 end
 
 return expect

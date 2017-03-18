@@ -67,18 +67,17 @@ function Warp.new(pad)
   local self = {}
   setmetatable(self, Warp)
 
-  assert(expect.basePart(pad), string.format("bad argument #1 to 'new' "..
-    "(BasePart expected, got %s)", expect.getType(pad)))
+  assert(expect(pad, "BasePart", 1, "new"))
 
   self.Pad = pad
-
   self.Warped = Signal.new()
 
   return self
 end
 
 function Warp:TeleportToPad(model)
-  assert(model, "Could not teleport (Model expected, got nil)")
+  assert(expect(model, "Model", 1, "TeleportToPad"))
+
   teleportOnTop(model, self.Pad)
   self.Warped:fire(model)
 end
