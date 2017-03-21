@@ -2,7 +2,7 @@
   Cell
   ====
 
-  Cells allow you to organize people depending on where they are in the game.
+  Cells allow you to organize players depending on where they are in the game.
 
   If you have distinct areas such as an overworld, a house, and a dungeon, you
   can use Cells to keep track of which player is in which area.
