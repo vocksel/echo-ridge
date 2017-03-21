@@ -105,7 +105,7 @@ function World:GetCellByName(cellName)
 end
 
 function World:AddCell(cell)
-  expect(cell, { "Cell", "string" }, 1, "AddCell")
+  expect(cell, "Cell", 1, "AddCell")
 
   self._Cells:Add(cell)
 end
