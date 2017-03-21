@@ -14,31 +14,20 @@
   Array.new(table items={})
     Creates a new Array, filled with `items`.
 
-  Properties
-  ----------
-
-  Items (table)
-    Holds all of the items in the Array.
-
-    Use Add() and Remove() instead of accessing this directly.
-
   Methods
   -------
 
   IsEmpty()
-    Returns true if there are any entries in self.Items. False otherwise.
-
-  Add(value)
-    Adds `value` to self.Items.
-
-    `value` can be anything: a ROBLOX instance, a table, a string, it doesn't
-    matter.
-
-  Remove(value)
-    Removes `value` from self.Items.
+    Returns true if there are any entries in the array. False otherwise.
 
   Has(value)
-    Returns true if `value` exists inside of self.Items. False otherwise.
+    Returns true if `value` exists inside of the array. False otherwise.
+
+  Add(value)
+    Adds `value` to self._Items.
+
+  Remove(value)
+    Removes `value` from the array.
 
   Usage
   -----
@@ -72,28 +61,28 @@ function Array.new(defaultItems)
   local self = {}
   setmetatable(self, Array)
 
-  self.Items = defaultItems or {}
+  self._Items = defaultItems or {}
 
   return self
 end
 
 function Array:IsEmpty()
-  return #self.Items == 0
+  return #self._Items == 0
 end
 
 function Array:Add(value)
-  table.insert(self.Items, value)
+  table.insert(self._Items, value)
 end
 
 function Array:Remove(value)
   if self:Has(value) then
-    local index = getIndexOfValue(value, self.Items)
-    table.remove(self.Items, index)
+    local index = getIndexOfValue(value, self._Items)
+    table.remove(self._Items, index)
   end
 end
 
 function Array:Has(value)
-  return getIndexOfValue(value, self.Items) and true or false
+  return getIndexOfValue(value, self._Items) and true or false
 end
 
 return Array
