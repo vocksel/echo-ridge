@@ -2,8 +2,7 @@
   World
   =====
 
-  A World allows you to easily move Players between the Cells in your game
-  without having to worry about leaving the last one they were in.
+  A World allows you to easily move Players between the Cells in your game.
 
   Conceptually, a World can be thought of as the game itself, and the Cells it
   has access to are all the areas the Player can travel to.
@@ -30,21 +29,18 @@
     one up by its Name.
 
   void AddCell(Cell cell)
-    Adds `cell` to the list of Cells mamaged by this class.
+    Adds `cell` to the list of Cells managed by this class.
 
   void RemoveCellByName(string cellName)
-    Removes `cell` from the list of Cells.
-
-    `cell` can either be a direct reference to one of the Cells in `Cells`, or
-    the name of one.
+    Removes a Cell managed by this class by its name.
 
   Cell GetCurrentCell(Player player)
-    Returns the Cell `player` is currently inside of.
+    Returns the Cell a Player is currently inside of.
 
-    If `player` is not in a Cell, returns nil.
+    Returns nil if the Player is not in a Cell.
 
   void LeaveCurrentCell(Player player)
-    Removes `player` from the Cell they're currently inside of.
+    Removes a Player from the Cell they're currently in.
 
     We don't have a method to explicitly leave one Cell, as each Player is only
     intended to be in one Cell at a time. This method is run automatically when
