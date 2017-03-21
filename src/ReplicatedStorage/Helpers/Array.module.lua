@@ -86,8 +86,10 @@ function Array:Add(value)
 end
 
 function Array:Remove(value)
-  local index = getIndexOfValue(value, self.Items)
-  table.remove(self.Items, index)
+  if self:Has(value) then
+    local index = getIndexOfValue(value, self.Items)
+    table.remove(self.Items, index)
+  end
 end
 
 function Array:Has(value)
