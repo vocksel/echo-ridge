@@ -22,15 +22,6 @@
     you create all your Cells after defining the World instance, you can use
     AddCells instead.
 
-  Properties
-  ----------
-
-  Cells (Array)
-    List of all the Cells that the instance of this class manages.
-
-    If you need to add or remove a Cell from the list, use AddCell and
-    RemoveCell, respectively.
-
   Methods
   -------
 
@@ -102,7 +93,7 @@ function World.new(cells)
   local self = {}
   setmetatable(self, World)
 
-  self.Cells = (cells and Array.new(cells)) or Array.new()
+  self._Cells = (cells and Array.new(cells)) or Array.new()
 
   self.CellEntered = Signal.new()
   self.CellLeft = Signal.new()
@@ -111,7 +102,7 @@ function World.new(cells)
 end
 
 function World:GetCellByName(cellName)
-  for _, cell in ipairs(self.Cells) do
+  for _, cell in ipairs(self._Cells) do
     if cell.Name == cellName then
       return cell
     end
@@ -121,7 +112,7 @@ end
 function World:AddCell(cell)
   expect(cell, { "Cell", "string" }, 1, "AddCell")
 
-  self.Cells:Add(cell)
+  self._Cells:Add(cell)
 end
 
 function World:RemoveCellByName(cellName)
@@ -129,13 +120,13 @@ function World:RemoveCellByName(cellName)
 
   local cell = self:GetCellByName(cellName)
 
-  if self.Cells:Has(cell) then
-    self.Cells:Remove(cell)
+  if self._Cells:Has(cell) then
+    self._Cells:Remove(cell)
   end
 end
 
 function World:GetCurrentCell(player)
-  for _, cell in ipairs(self.Cells) do
+  for _, cell in ipairs(self._Cells) do
     if cell:IsInCell(player) then
       return cell
     end
