@@ -82,7 +82,6 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 local Array = require(replicatedStorage.Helpers.Array)
 local expect = require(replicatedStorage.Helpers.Expect)
 local Signal = require(replicatedStorage.Events.Signal)
-local Cell = require(script.Parent.Cell)
 
 --------------------------------------------------------------------------------
 
