@@ -132,8 +132,8 @@
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
+local Array = require(replicatedStorage.Helpers.Array)
 local expect = require(replicatedStorage.Helpers.Expect)
-local getIndexOfValue = require(replicatedStorage.Helpers.GetIndexOfValue)
 local Signal = require(replicatedStorage.Events.Signal)
 
 --------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ function Cell.new(name)
   assert(type(name) == "string", "You must supply a Name for your Cell.")
 
   self.Name = name
-  self.Players = {}
+  self.Players = Array.new()
 
   self.Entered = Signal.new()
   self.Left = Signal.new()
@@ -163,22 +163,21 @@ end
 function Cell:IsInCell(player)
   assert(expect(player, "Player", 1, "IsInCell"))
 
-  return getIndexOfValue(player, self.Players) and true or false
+  return self.Players:Has(player) and true or false
 end
 
 function Cell:Enter(player)
   assert(expect(player, "Player", 1, "Player"))
 
-  table.insert(self.Players, player)
+  self.Players:Add(player)
   self.Entered:fire(player)
 end
 
 function Cell:Leave(player)
   assert(expect(player, "Player", 1, "Leave"))
 
-  local index = getIndexOfValue(player, self.Players)
-  if index then
-    table.remove(self.Players, index)
+  if self.Players:Has(player) then
+    self.Players:Remove(player)
     self.Left:fire(player)
   end
 end

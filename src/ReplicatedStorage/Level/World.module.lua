@@ -25,7 +25,7 @@
   Properties
   ----------
 
-  Cells (table)
+  Cells (Array)
     List of all the Cells that the instance of this class manages.
 
     If you need to add or remove a Cell from the list, use AddCell and
@@ -88,7 +88,7 @@
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local getIndexOfValue = require(replicatedStorage.Helpers.GetIndexOfValue)
+local Array = require(replicatedStorage.Helpers.Array)
 local expect = require(replicatedStorage.Helpers.Expect)
 local Signal = require(replicatedStorage.Events.Signal)
 local Cell = require(script.Parent.Cell)
@@ -102,7 +102,7 @@ function World.new(cells)
   local self = {}
   setmetatable(self, World)
 
-  self.Cells = cells or {}
+  self.Cells = (cells and Array.new(cells)) or Array.new()
 
   self.CellEntered = Signal.new()
   self.CellLeft = Signal.new()
@@ -121,7 +121,7 @@ end
 function World:AddCell(cell)
   expect(cell, { "Cell", "string" }, 1, "AddCell")
 
-  table.insert(self.Cells, cell)
+  self.Cells:Add(cell)
 end
 
 function World:RemoveCellByName(cellName)
@@ -129,9 +129,8 @@ function World:RemoveCellByName(cellName)
 
   local cell = self:GetCellByName(cellName)
 
-  local index = getIndexOfValue(cell, self.Cells)
-  if index then
-    table.remove(self.Cells, index)
+  if self.Cells:Has(cell) then
+    self.Cells:Remove(cell)
   end
 end
 
