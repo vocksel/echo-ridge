@@ -93,8 +93,7 @@ function Array:Remove(value)
 end
 
 function Array:Has(value)
-  local index = getIndexOfValue(value, self.Items)
-  return (index and self.Items[index]) and true or false
+  return getIndexOfValue(value, self.Items) and true or false
 end
 
 return Array
