@@ -41,7 +41,7 @@
   void AddCell(Cell cell)
     Adds `cell` to the list of Cells mamaged by this class.
 
-  void RemoveCell(Cell/string cell)
+  void RemoveCellByName(string cellName)
     Removes `cell` from the list of Cells.
 
     `cell` can either be a direct reference to one of the Cells in `Cells`, or
@@ -64,14 +64,11 @@
 
     Fires CellLeft.
 
-  void EnterCell(Cell/string cell, Player player)
-    Adds `player` to `cell`.
+  void EnterCell(string cellName, Player player)
+    Add a Player to the specified Cell.
 
-    This method calls LeaveCurrentCell so that `player` is only ever in one Cell
-    at a time.
-
-    `cell`, like with RemoveCell, can either be a Cell instance inside of the
-    Cell list, or a string with one of their names.
+    This method also removes the player from Cell they're currently in. This
+    ensures the player is only in one Cell at a time.
 
     Fires CellEntered.
 
@@ -121,27 +118,16 @@ function World:GetCellByName(cellName)
   end
 end
 
--- This is used so you can use either a string or a direct reference to a Cell.
-function World:_GetByCellOrName(cell)
-  expect(cell, { "Cell", "string" }, 1, "_GetByCellOrName")
-
-  if type(cell) == "string" then
-    return self:GetCellByName(cell)
-  else
-    return cell
-  end
-end
-
 function World:AddCell(cell)
   expect(cell, { "Cell", "string" }, 1, "AddCell")
 
   table.insert(self.Cells, cell)
 end
 
-function World:RemoveCell(cell)
-  expect(cell, { "Cell", "string" }, 1, "RemoveCell")
+function World:RemoveCellByName(cellName)
+  expect(cellName, "string", 1, "RemoveCell")
 
-  cell = self:_GetByCellOrName(cell)
+  local cell = self:GetCellByName(cellName)
 
   local index = getIndexOfValue(cell, self.Cells)
   if index then
@@ -165,10 +151,10 @@ function World:LeaveCurrentCell(player)
   end
 end
 
-function World:EnterCell(cell, player)
-  expect(cell, { "Cell", "string" }, 1, "EnterCell")
+function World:EnterCell(cellName, player)
+  expect(cellName, "string", 1, "EnterCell")
 
-  cell = self:_GetByCellOrName(cell)
+  local cell = self:GetCellByName(cellName)
   self:LeaveCurrentCell(player)
   cell:Enter(player)
   self.CellEntered:fire(cell, player)
