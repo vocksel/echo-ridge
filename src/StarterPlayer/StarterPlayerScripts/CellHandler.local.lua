@@ -53,7 +53,7 @@ local function setupWorld()
   world:EnterCell("GeosRoom", client)
 
   warpedToCell.Event:connect(function(cellModel)
-    world:EnterCell(cellModel.Name)
+    world:EnterCell(cellModel.Name, client)
   end)
 end
 

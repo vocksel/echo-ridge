@@ -97,7 +97,7 @@ function World.new(cells)
 end
 
 function World:GetCellByName(cellName)
-  for _, cell in ipairs(self._Cells) do
+  for _, cell in ipairs(self._Cells._Items) do
     if cell.Name == cellName then
       return cell
     end
@@ -121,7 +121,7 @@ function World:RemoveCellByName(cellName)
 end
 
 function World:GetCurrentCell(player)
-  for _, cell in ipairs(self._Cells) do
+  for _, cell in ipairs(self._Cells.Items) do
     if cell:IsInCell(player) then
       return cell
     end
