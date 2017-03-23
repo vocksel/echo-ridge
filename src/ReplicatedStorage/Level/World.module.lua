@@ -111,7 +111,7 @@ function World:AddCell(cell)
 end
 
 function World:RemoveCellByName(cellName)
-  expect(cellName, "string", 1, "RemoveCell")
+  expect(cellName, "string", 1, "RemoveCellByName")
 
   local cell = self:GetCellByName(cellName)
 
