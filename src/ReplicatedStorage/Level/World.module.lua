@@ -97,11 +97,9 @@ function World.new(cells)
 end
 
 function World:GetCellByName(cellName)
-  for _, cell in ipairs(self._Cells._Items) do
-    if cell.Name == cellName then
-      return cell
-    end
-  end
+  return self._Cells:Find(function(cell)
+    return cell.Name == cellName
+  end)
 end
 
 function World:AddCell(cell)
@@ -121,11 +119,11 @@ function World:RemoveCellByName(cellName)
 end
 
 function World:GetCurrentCell(player)
-  for _, cell in ipairs(self._Cells.Items) do
+  return self._Cells:Find(function(cell)
     if cell:IsInCell(player) then
       return cell
     end
-  end
+  end)
 end
 
 function World:LeaveCurrentCell(player)

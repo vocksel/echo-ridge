@@ -29,6 +29,10 @@
   Remove(value)
     Removes `value` from the array.
 
+  Find(callback)
+    Returns the value of the first item in the Array that satisfies the
+    provided callback.
+
   Usage
   -----
 
@@ -83,6 +87,14 @@ end
 
 function Array:Has(value)
   return getIndexOfValue(value, self._Items) and true or false
+end
+
+function Array:Find(callback)
+  for _, item in ipairs(self._Items) do
+    if callback(item) then
+      return item
+    end
+  end
 end
 
 return Array
